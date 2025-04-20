@@ -18,40 +18,45 @@ import base64
 DEFAULT_PENSION_DATA = {
     "current_pension_value": 0,
     "current_value_date": date.today().isoformat(),
-    "birth_date": "1990-01-01",
+    "birth_date": "2000-01-01",
     "retirement_age": 65,
-    "current_salary": 60000,
-    "maximum_salary": 120000,
+    "current_salary": 100000,
+    "maximum_salary": 130434,
     "years_to_max_salary": 15,
-    "expected_yield": 5.0,
+    "expected_yield": 1.25,
     "personal_contribution_ranges": [
         {
-            "age_from": 18, 
-            "age_to": 25, 
-            "options": [4.0, 6.0, 8.0]
-        },
-        {
-            "age_from": 25, 
-            "age_to": 35, 
-            "options": [6.0, 7.0, 9.0]
+            "age_from": 22, 
+            "age_to": 34, 
+            "options": [5.0, 5.85, 6.0]
         },
         {
             "age_from": 35, 
-            "age_to": 50, 
-            "options": [7.0, 9.0, 11.0]
+            "age_to": 44, 
+            "options": [7.0, 7.25, 7.5]
         },
         {
-            "age_from": 50, 
+            "age_from": 45, 
+            "age_to": 54, 
+            "options": [9.0, 9.4, 10.0]
+        },
+        {
+            "age_from": 55, 
             "age_to": 65, 
-            "options": [8.0, 10.0, 12.0]
+            "options": [11.0, 12.5, 14.0]
+        },
+        {
+            "age_from": 66, 
+            "age_to": 70, 
+            "options": [5.5, 5.85, 6.0]
         }
     ],
     "employer_contributions": [
-        {"age_from": 18, "age_to": 25, "percentage": 6.0},
-        {"age_from": 25, "age_to": 35, "percentage": 9.0},
-        {"age_from": 35, "age_to": 45, "percentage": 14.0},
-        {"age_from": 45, "age_to": 55, "percentage": 18.0},
-        {"age_from": 55, "age_to": 65, "percentage": 20.0}
+        {"age_from": 22, "age_to": 34, "percentage": 6.9},
+        {"age_from": 35, "age_to": 44, "percentage": 9.0},
+        {"age_from": 45, "age_to": 54, "percentage": 16.6},
+        {"age_from": 55, "age_to": 65, "percentage": 21.75},
+        {"age_from": 66, "age_to": 70, "percentage": 5.85}
     ],
     "pension_plans": {},
     "language": "en",
@@ -1511,16 +1516,16 @@ def pension_calculator_page():
                     default_range = data["personal_contribution_ranges"][i]
                 else:
                     default_range = {
-                        "age_from": 18 + i * 10,
-                        "age_to": 28 + i * 10,
-                        "options": [4.0 + i, 6.0 + i, 8.0 + i]
+                        "age_from": 22 + i * 10,
+                        "age_to": 34 + i * 10,
+                        "options": [5.95 + i, 6.95 + i, 8.0 + i]
                     }
                 
                 with cols[0]:
                     age_from = st.number_input(
                         t("from_age"),
                         min_value=18,
-                        max_value=data["retirement_age"],
+                        max_value=70,
                         value=default_range["age_from"],
                         key=f"personal_age_from_{i}"
                     )
@@ -1529,7 +1534,7 @@ def pension_calculator_page():
                     age_to = st.number_input(
                         t("to_age"),
                         min_value=age_from + 1,
-                        max_value=data["retirement_age"] + 1,
+                        max_value=70,
                         value=default_range["age_to"],
                         key=f"personal_age_to_{i}"
                     )
@@ -1575,16 +1580,16 @@ def pension_calculator_page():
                     default_range = data["employer_contributions"][i]
                 else:
                     default_range = {
-                        "age_from": 18 + i * 10,
-                        "age_to": 28 + i * 10,
-                        "percentage": 6.0 + i * 2
+                        "age_from": 22 + i * 10,
+                        "age_to": 34 + i * 10,
+                        "percentage": 6.8 + i * 2
                     }
                 
                 with cols[0]:
                     age_from = st.number_input(
                         t("from_age"),
                         min_value=18,
-                        max_value=data["retirement_age"],
+                        max_value=70,
                         value=default_range["age_from"],
                         key=f"employer_age_from_{i}"
                     )
@@ -1593,7 +1598,7 @@ def pension_calculator_page():
                     age_to = st.number_input(
                         t("to_age"),
                         min_value=age_from + 1,
-                        max_value=data["retirement_age"] + 1,
+                        max_value=70,
                         value=default_range["age_to"],
                         key=f"employer_age_to_{i}"
                     )
@@ -1637,7 +1642,7 @@ def pension_calculator_page():
                 else:
                     default_entry = {
                         "from_year": 2000 + i * 5,
-                        "amount": 25000 + i * 1000
+                        "amount": 24120 + i * 1000
                     }
                 
                 with cols[0]:
