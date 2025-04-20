@@ -844,401 +844,30 @@ def simulate_pension(birth_date, retirement_age, current_salary, max_salary, yea
         return df
 
 def get_print_css():
-    """Return improved CSS for print styling with fixes for chart duplication."""
+    """Return basic CSS styling without complex print formatting."""
     return """
         <style>
+        /* Basic styling for the app */
+        .dataframe {
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        /* Basic print styling */
         @media print {
             /* Hide Streamlit UI elements */
-            header, footer {
-                display: none !important;
-            }
-            .stApp > header {
-                display: none !important;
-            }
-            .stApp [data-testid="stSidebar"] {
-                display: none !important;
-            }
-            .stApp [data-testid="stHeader"] {
-                display: none !important;
-            }
-            .stApp [data-testid="stToolbar"] {
-                display: none !important;
-            }
-            section[data-testid="stSidebar"] {
-                display: none !important;
-            }
-            div[data-testid="stDecoration"] {
-                display: none !important;
-            }
-            div[data-testid="stStatusWidget"] {
-                display: none !important;
-            }
-            iframe {
-                display: none !important;
-            }
-            
-            /* Hide all buttons */
-            button {
-                display: none !important;
-            }
-            .stButton {
-                display: none !important;
-            }
-            .print-button {
+            header, footer, .stSidebar, button {
                 display: none !important;
             }
             
             /* Hide input elements */
-            .stTextInput {
-                display: none !important;
-            }
-            .stSelectbox {
-                display: none !important;
-            }
-            .stNumberInput {
-                display: none !important;
-            }
-            .stRadio {
-                display: none !important;
-            }
-            .stCheckbox {
-                display: none !important;
-            }
-            .stSlider {
-                display: none !important;
-            }
-            .stDateInput {
-                display: none !important;
-            }
-            
-            /* Hide tabs */
-            .stTabs [data-baseweb="tab-list"] {
-                display: none !important;
-            }
-            
-            /* Hide expanders */
-            .streamlit-expanderHeader {
-                display: none !important;
-            }
-            
-            /* Hide specific sections in print */
-            .hide-from-print {
-                display: none !important;
-            }
-            
-            /* Make sure Check Fund Value section is hidden */
-            .check-fund-value-section {
-                display: none !important;
-            }
-            
-            /* Hide option selector in print view */
-            #select-an-option-to-view-details, #select-an-option-to-view-details + div,
-            [data-testid="stSelectbox"], .stSelectbox {
-                display: none !important;
-            }
-            
-            /* Show print sections */
-            .print-all-options {
-                display: block !important;
-            }
-            
-            /* Hide the selected option details section in print */
-            .selected-option-details {
-                display: none !important;
-            }
-            
-            /* Style the content */
-            .stMarkdown {
-                font-size: 12pt !important;
-            }
-            .stMarkdown h1 {
-                font-size: 24pt !important;
-                margin-top: 10pt !important;
-                margin-bottom: 10pt !important;
-            }
-            .stMarkdown h2 {
-                font-size: 18pt !important;
-                margin-top: 8pt !important;
-                margin-bottom: 8pt !important;
-            }
-            .stMarkdown h3 {
-                font-size: 14pt !important;
-                margin-top: 6pt !important;
-                margin-bottom: 6pt !important;
-            }
-            
-            /* Ensure dataframes and charts are visible */
-            .dataframe {
-                width: 100% !important;
-                overflow: visible !important;
-                font-size: 10pt !important;
-                page-break-inside: auto !important;
-                opacity: 1 !important;
-            }
-            .dataframe th, .dataframe td {
-                padding: 5px !important;
-                border: 1px solid #ddd !important;
-                opacity: 1 !important;
-            }
-            .dataframe th {
-                background-color: #f8f9fa !important;
-                font-weight: bold !important;
-            }
-            
-            /* Ensure charts are fully opaque and properly rendered */
-            canvas, .js-plotly-plot, .plotly, svg {
-                opacity: 1 !important;
-                overflow: visible !important;
-            }
-            
-            /* Fix for chart display in print */
-            .stPlotlyChart {
-                max-width: 100% !important;
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-                margin-bottom: 20pt !important;
-            }
-            
-            /* Fix for overlapping charts in print view */
-            .print-all-options > div {
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-                margin-bottom: 30pt !important;
-                clear: both !important;
-            }
-            
-            /* Force each option section to start on a new page */
-            .print-all-options > h3 {
-                page-break-before: always !important;
-                break-before: page !important;
-                margin-top: 20pt !important;
-                padding-top: 20pt !important;
-            }
-            
-            /* Fix for duplicate charts */
-            .print-all-options .js-plotly-plot + .js-plotly-plot,
-            .print-all-options .plotly + .plotly {
-                display: none !important;
-            }
-            
-            /* Prevent chart overflow */
-            .main-svg {
-                max-width: 100% !important;
-            }
-            
-            /* Repeat headers when tables break across pages */
-            thead {
-                display: table-header-group !important;
-            }
-            tr {
-                page-break-inside: avoid !important;
-                page-break-after: auto !important;
-            }
-            
-            /* Ensure canvas and SVG elements are properly sized */
-            canvas, .js-plotly-plot, .plotly {
-                display: block !important;
-                width: 100% !important;
-                max-width: 100% !important;
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-                opacity: 1 !important;
-            }
-            
-            /* Remove margins */
-            .element-container {
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-            
-            /* Hide plotly modebar */
-            .modebar {
-                display: none !important;
-            }
-            
-            /* Fix stale elements */
-            [data-stale="true"] {
-                display: none !important;
-            }
-            
-            /* Fix duplicate SVGs */
-            .main-svg + .main-svg {
-                display: none !important;
-            }
-            
-            /* Adjust page margins */
-            @page {
-                margin: 2cm;
-                size: A4 portrait;
-            }
-            
-            /* Ensure content is not cut off */
-            body {
-                overflow: visible !important;
-            }
-            .main .block-container {
-                padding: 0 !important;
-                max-width: 100% !important;
-            }
-            
-            /* Show print header */
-            .print-header {
-                display: block !important;
-                text-align: center;
-                margin-bottom: 20pt;
-                border-bottom: 1px solid #ccc;
-                padding-bottom: 10pt;
-            }
-            .print-header h1 {
-                margin: 0;
-                padding: 0;
-            }
-            .print-header p {
-                margin: 5pt 0 0 0;
-                font-size: 10pt;
-                color: #666;
-            }
-        }
-        
-        /* Hide print header in normal view */
-        .print-header {
-            display: none;
-        }
-        
-        /* Style for the print button */
-        .print-button {
-            background-color: #007bff;
-            color: white;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            margin: 1rem 0;
-        }
-        .print-button:hover {
-            background-color: #0056b3;
-        }
-        
-        /* Hide print sections in normal view */
-        .print-all-options {
-            display: none;
-        }
-        
-        /* Fix for Plotly charts in normal view */
-        .js-plotly-plot, .plotly, .plot-container {
-            position: relative !important;
-            z-index: 1 !important;
-        }
-        
-        /* Ensure charts don't overlap */
-        .element-container {
-            position: relative !important;
-            z-index: auto !important;
-            overflow: visible !important;
-        }
-        
-        /* Prevent stale elements from showing */
-        [data-stale="true"] {
-            display: none !important;
-        }
-            
-        /* Hide duplicate charts */
-        .main-svg + .main-svg {
-            display: none !important;
-        }
-        
-        /* Hide these sections in print */
-        @media print {
-            .hide-in-print {
+            .stTextInput, .stSelectbox, .stNumberInput, .stRadio, 
+            .stCheckbox, .stSlider, .stDateInput {
                 display: none !important;
             }
         }
         </style>
     """
-
-# JavaScript helper to clean up Plotly chart rendering
-def add_chart_cleanup_js():
-    """Add JavaScript to clean up Plotly chart rendering issues"""
-    js_code = """
-    <script>
-        // Function to clean up stale and duplicate elements
-        function cleanupElements() {
-            // Remove stale elements
-            const staleElements = document.querySelectorAll('[data-stale="true"]');
-            staleElements.forEach(el => {
-                el.remove();
-            });
-            
-            // Remove duplicate SVGs in charts
-            const plotlyContainers = document.querySelectorAll('.js-plotly-plot');
-            plotlyContainers.forEach(container => {
-                const svgs = container.querySelectorAll('.main-svg');
-                if (svgs.length > 2) {  // First 2 are valid: main + legend
-                    for (let i = 2; i < svgs.length; i++) {
-                        svgs[i].remove();
-                    }
-                }
-            });
-            
-            // Fix z-index issues
-            const charts = document.querySelectorAll('.stPlotlyChart');
-            charts.forEach((chart, index) => {
-                chart.style.zIndex = 1;
-                chart.style.position = 'relative';
-            });
-        }
-        
-        // Run on initial load
-        document.addEventListener('DOMContentLoaded', cleanupElements);
-        
-        // Detect Streamlit's rerender
-        const observer = new MutationObserver((mutations) => {
-            let shouldCleanup = false;
-            
-            mutations.forEach(mutation => {
-                if (mutation.addedNodes.length > 0) {
-                    // Check if any Plotly charts were added
-                    mutation.addedNodes.forEach(node => {
-                        if (node.querySelector && node.querySelector('.js-plotly-plot')) {
-                            shouldCleanup = true;
-                        }
-                    });
-                }
-            });
-            
-            if (shouldCleanup) {
-                // Delay slightly to ensure DOM is updated
-                setTimeout(cleanupElements, 50);
-            }
-        });
-        
-        // Start observing
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-        
-        // Add special handling for print
-        window.addEventListener('beforeprint', () => {
-            // Force cleanup before printing
-            cleanupElements();
-            
-            // Make sure print-all-options is visible
-            const printSections = document.querySelectorAll('.print-all-options');
-            printSections.forEach(section => {
-                section.style.display = 'block';
-            });
-            
-            // Hide interactive sections
-            const detailSections = document.querySelectorAll('.selected-option-details');
-            detailSections.forEach(section => {
-                section.style.display = 'none';
-            });
-        });
-    </script>
-    """
-    st.markdown(js_code, unsafe_allow_html=True)
 
 # Modify the chart creation functions to improve stability
 def create_stable_plotly_chart(fig, container_id=None, use_container_width=True, static_plot=False):
@@ -1402,36 +1031,37 @@ def main():
     if 'language' not in st.session_state:
         st.session_state.language = st.session_state.pension_data.get('language', 'en')
     
-    # Add CSS for print and display
+    # Add basic CSS
     st.markdown(get_print_css(), unsafe_allow_html=True)
-
-    # Add JavaScript for chart cleanup
-    add_chart_cleanup_js()
 
     # Language selection in sidebar
     selected_language = st.sidebar.selectbox(
         "Language / Sprache / Langue / Lingua",
         options=list(LANGUAGES.keys()),
         format_func=lambda x: LANGUAGES[x],
-        index=list(LANGUAGES.keys()).index(st.session_state.language),
-        key="language_selector"
+        index=list(LANGUAGES.keys()).index(st.session_state.language)
     )
     
     if selected_language != st.session_state.language:
         st.session_state.language = selected_language
         st.session_state.pension_data["language"] = selected_language
         st.rerun()
+
+    # Sidebar for navigation
+    menu_options = [t("pension_calculator"), t("plan_management"), t("comparison")]
     
-    st.title(t("app_title"))
-    st.caption(t("app_subtitle"))
-    
-    # Add data privacy message
-    st.sidebar.info(t("data_privacy_message"))
+    selected_menu = st.sidebar.selectbox(
+        t("navigation"), 
+        menu_options
+    )
     
     # Data management section in sidebar
     st.sidebar.markdown("---")
     st.sidebar.header(t("data_management"))
     
+    # Add data privacy message
+    st.sidebar.info(t("data_privacy_message"))
+
     # Export data button
     st.sidebar.markdown(f"### {t('export_data')}")
     download_link = export_data()
@@ -1454,121 +1084,6 @@ def main():
             # Reset the flag so user can try again
             st.session_state.file_processed = False
     
-    # Print CSS with updated selectors to prevent chart duplication
-    st.markdown(get_print_css() + """
-        <style>
-        /* Additional CSS to prevent chart duplication and fix rendering issues */
-        .js-plotly-plot, .plotly, .plot-container {
-            position: relative !important;
-            z-index: 1 !important;
-        }
-        
-        /* Ensure charts don't overlap */
-        .element-container {
-            position: relative !important;
-            z-index: auto !important;
-            overflow: visible !important;
-        }
-        
-        /* Prevent stale elements from showing */
-        [data-stale="true"] {
-            display: none !important;
-        }
-        
-        /* Hide duplicate charts */
-        .main-svg + .main-svg {
-            display: none !important;
-        }
-        
-        /* Better styling for the print view */
-        @media print {
-            .print-all-options .js-plotly-plot,
-            .print-all-options .plotly {
-                break-inside: avoid !important;
-                page-break-inside: avoid !important;
-                margin-bottom: 30pt !important;
-            }
-            
-            /* Ensure no overlapping in print */
-            .print-all-options h3 {
-                clear: both !important;
-                break-before: page !important;
-                page-break-before: always !important;
-                margin-top: 20pt !important;
-            }
-            
-            /* Hide any duplicate elements */
-            .print-all-options .stPlotlyChart + .stPlotlyChart {
-                display: none !important;
-            }
-        }
-        </style>
-    """, unsafe_allow_html=True)
-    
-    # Add clearing script for Plotly charts
-    st.markdown("""
-        <script>
-            // Clean up any stale plotly elements
-            function cleanupStaleElements() {
-                const staleElements = document.querySelectorAll('[data-stale="true"]');
-                staleElements.forEach(el => {
-                    el.remove();
-                });
-                
-                // Also clean up any duplicate Plotly charts
-                const plotlySvgs = document.querySelectorAll('.main-svg');
-                const svgParents = new Set();
-                plotlySvgs.forEach(svg => {
-                    const parent = svg.parentNode;
-                    if (svgParents.has(parent)) {
-                        svg.remove();
-                    } else {
-                        svgParents.add(parent);
-                    }
-                });
-            }
-            
-            // Run on load
-            document.addEventListener('DOMContentLoaded', cleanupStaleElements);
-            
-            // Clean up again when Streamlit refreshes components
-            const observer = new MutationObserver(function(mutations) {
-                cleanupStaleElements();
-            });
-            
-            observer.observe(document.body, { childList: true, subtree: true });
-        </script>
-    """, unsafe_allow_html=True)
-    
-    # Sidebar for navigation with improved page tracking
-    menu_options = [t("pension_calculator"), t("plan_management"), t("comparison")]
-    
-    # Generate a unique key for the navigation menu
-    nav_key = f"nav_{datetime.now().strftime('%Y%m%d%H%M%S')}"
-    
-    selected_menu = st.sidebar.selectbox(
-        t("navigation"), 
-        menu_options,
-        key=nav_key
-    )
-    
-    # Track page changes and generate a unique ID for components on this page
-    current_page_id = hash(f"{selected_menu}_{datetime.now().strftime('%Y%m%d%H%M%S')}")
-    
-    if 'current_page' not in st.session_state:
-        st.session_state.current_page = selected_menu
-        st.session_state.page_id = current_page_id
-    
-    # When page changes, update page ID to force recreation of components
-    if st.session_state.current_page != selected_menu:
-        st.session_state.current_page = selected_menu
-        st.session_state.page_id = current_page_id
-        
-        # Clear any lingering state that might cause issues
-        for key in list(st.session_state.keys()):
-            if key.startswith('selected_option_') or key.startswith('option_selector_'):
-                del st.session_state[key]
-    
     # Render the appropriate page
     if selected_menu == t("pension_calculator"):
         pension_calculator_page()
@@ -1577,20 +1092,16 @@ def main():
     elif selected_menu == t("comparison"):
         comparison_page()
 
-
 def pension_calculator_page():
     """
-    Complete rewrite of the pension calculator page with fixed container management 
-    and proper handling of chart rendering
+    Simplified pension calculator page that always shows all three options
     """
     # Access data from session state
     data = st.session_state.pension_data
     
-    # Wrap header and configuration sections in hide-from-print divs
-    st.markdown('<div class="hide-from-print">', unsafe_allow_html=True)
-    
     st.header(t("pension_calculator"))
     
+    # Configuration inputs (columns, personal info, etc.)
     col1, col2 = st.columns(2)
     
     with col1:
@@ -1642,8 +1153,7 @@ def pension_calculator_page():
         
         has_13th_salary = st.checkbox(
             t("13th_salary"),
-            value=data.get("has_13th_salary", False),
-            key="has_13th_salary"
+            value=data.get("has_13th_salary", False)
         )
         data["has_13th_salary"] = has_13th_salary
         
@@ -1667,8 +1177,7 @@ def pension_calculator_page():
             t("bonus_settings"),
             [label for _, label in bonus_options],
             index=default_idx,
-            horizontal=True,
-            key="bonus_type_radio"
+            horizontal=True
         )
         
         if bonus_type == t("percentage_bonus"):
@@ -1678,8 +1187,7 @@ def pension_calculator_page():
                 min_value=0.0,
                 max_value=100.0,
                 value=data.get("bonus_percentage", 0.0),
-                step=0.5,
-                key="bonus_percentage_input"
+                step=0.5
             )
             data["bonus_percentage"] = bonus_percentage
             data["bonus_fixed"] = 0.0
@@ -1689,8 +1197,7 @@ def pension_calculator_page():
                 t("bonus_amount"),
                 min_value=0,
                 value=data.get("bonus_fixed", 0),
-                step=1000,
-                key="bonus_fixed_input"
+                step=1000
             )
             data["bonus_fixed"] = bonus_fixed
             data["bonus_percentage"] = 0.0
@@ -1752,8 +1259,7 @@ def pension_calculator_page():
                 t("number_of_ranges"),
                 min_value=1,
                 max_value=10,
-                value=len(data.get("personal_contribution_ranges", DEFAULT_PENSION_DATA["personal_contribution_ranges"])),
-                key="num_personal_ranges"
+                value=len(data.get("personal_contribution_ranges", DEFAULT_PENSION_DATA["personal_contribution_ranges"]))
             )
             
             personal_contribution_ranges = []
@@ -1809,14 +1315,169 @@ def pension_calculator_page():
             
             data["personal_contribution_ranges"] = personal_contribution_ranges
         
-        # Other tabs - content remains the same as the original implementation
-        # but omitted here for brevity
-       
+        with employer_tab:
+            st.write(t("configure_employer_contributions"))
+            
+            num_employer_ranges = st.number_input(
+                t("number_of_ranges"),
+                min_value=1,
+                max_value=10,
+                value=len(data.get("employer_contributions", DEFAULT_PENSION_DATA["employer_contributions"])),
+                key="num_employer_ranges"
+            )
+            
+            employer_contributions = []
+            for i in range(num_employer_ranges):
+                st.write(f"{t('range')} {i+1}")
+                cols = st.columns(3)
+                
+                if "employer_contributions" in data and i < len(data["employer_contributions"]):
+                    default_range = data["employer_contributions"][i]
+                else:
+                    default_range = {
+                        "age_from": 18 + i * 10,
+                        "age_to": 28 + i * 10,
+                        "percentage": 6.0 + i * 2
+                    }
+                
+                with cols[0]:
+                    age_from = st.number_input(
+                        t("from_age"),
+                        min_value=18,
+                        max_value=data["retirement_age"],
+                        value=default_range["age_from"],
+                        key=f"employer_age_from_{i}"
+                    )
+                
+                with cols[1]:
+                    age_to = st.number_input(
+                        t("to_age"),
+                        min_value=age_from + 1,
+                        max_value=data["retirement_age"] + 1,
+                        value=default_range["age_to"],
+                        key=f"employer_age_to_{i}"
+                    )
+                
+                with cols[2]:
+                    percentage = st.number_input(
+                        t("contribution_percentage"),
+                        min_value=0.0,
+                        max_value=50.0,
+                        value=default_range["percentage"],
+                        step=0.5,
+                        key=f"employer_contribution_{i}"
+                    )
+                
+                employer_contributions.append({
+                    "age_from": age_from,
+                    "age_to": age_to,
+                    "percentage": percentage
+                })
+            
+            data["employer_contributions"] = employer_contributions
+            
+        with coordination_tab:
+            st.write(t("coordination_fee_info"))
+            
+            num_coordination_entries = st.number_input(
+                t("number_of_entries"),
+                min_value=1,
+                max_value=10,
+                value=len(data.get("coordination_fees", DEFAULT_PENSION_DATA["coordination_fees"])),
+                key="num_coordination_entries"
+            )
+            
+            coordination_fees = []
+            for i in range(num_coordination_entries):
+                st.write(f"{t('entry')} {i+1}")
+                cols = st.columns(2)
+                
+                if "coordination_fees" in data and i < len(data["coordination_fees"]):
+                    default_entry = data["coordination_fees"][i]
+                else:
+                    default_entry = {
+                        "from_year": 2000 + i * 5,
+                        "amount": 25000 + i * 1000
+                    }
+                
+                with cols[0]:
+                    from_year = st.number_input(
+                        t("from_year"),
+                        min_value=1900,
+                        max_value=2100,
+                        value=default_entry["from_year"],
+                        key=f"coordination_from_year_{i}"
+                    )
+                
+                with cols[1]:
+                    amount = st.number_input(
+                        t("amount"),
+                        min_value=0,
+                        max_value=100000,
+                        value=default_entry["amount"],
+                        step=100,
+                        key=f"coordination_amount_{i}"
+                    )
+                
+                coordination_fees.append({
+                    "from_year": from_year,
+                    "amount": amount
+                })
+            
+            data["coordination_fees"] = coordination_fees
+            
+        with occupation_tab:
+            st.write(t("occupation_info"))
+            
+            num_occupation_entries = st.number_input(
+                t("number_of_entries"),
+                min_value=1,
+                max_value=10,
+                value=len(data.get("occupation_levels", DEFAULT_PENSION_DATA["occupation_levels"])),
+                key="num_occupation_entries"
+            )
+            
+            occupation_levels = []
+            for i in range(num_occupation_entries):
+                st.write(f"{t('entry')} {i+1}")
+                cols = st.columns(2)
+                
+                if "occupation_levels" in data and i < len(data["occupation_levels"]):
+                    default_entry = data["occupation_levels"][i]
+                else:
+                    default_entry = {
+                        "from_year": 2000 + i * 5,
+                        "percentage": 100.0
+                    }
+                
+                with cols[0]:
+                    from_year = st.number_input(
+                        t("from_year"),
+                        min_value=1900,
+                        max_value=2100,
+                        value=default_entry["from_year"],
+                        key=f"occupation_from_year_{i}"
+                    )
+                
+                with cols[1]:
+                    percentage = st.number_input(
+                        t("percentage"),
+                        min_value=0.0,
+                        max_value=100.0,
+                        value=default_entry["percentage"],
+                        step=5.0,
+                        key=f"occupation_percentage_{i}"
+                    )
+                
+                occupation_levels.append({
+                    "from_year": from_year,
+                    "percentage": percentage
+                })
+            
+            data["occupation_levels"] = occupation_levels
+    
     # Update session state
     st.session_state.pension_data = data
-    
-    # End hide-from-print section
-    st.markdown('</div>', unsafe_allow_html=True)
     
     # Simulate and display results
     st.header(t("simulation_results"))
@@ -1840,7 +1501,7 @@ def pension_calculator_page():
             data.get("bonus_type", "percentage"),
             data.get("bonus_percentage", 0.0),
             data.get("bonus_fixed", 0.0),
-            is_monthly,
+            is_monthly,  # Use the existing is_monthly value
             data.get("coordination_fees", DEFAULT_PENSION_DATA["coordination_fees"]),
             data.get("occupation_levels", DEFAULT_PENSION_DATA["occupation_levels"])
         )
@@ -1848,8 +1509,7 @@ def pension_calculator_page():
             sim["Option"] = f"{t('option')} {i+1}"
             simulations.append(sim)
     
-    # Check Fund Value at Specific Date (wrapped in hide-from-print)
-    st.markdown('<div class="hide-from-print check-fund-value-section">', unsafe_allow_html=True)
+    # Check Fund Value at Specific Date
     st.subheader(t("check_fund_value"))
     check_date = st.date_input(t("select_month_year"), value=date.today())
     
@@ -1863,7 +1523,7 @@ def pension_calculator_page():
                 data["maximum_salary"],
                 data["years_to_max_salary"],
                 data["expected_yield"],
-                idx,  # Use enumeration index directly
+                idx,
                 data["personal_contribution_ranges"],
                 data["employer_contributions"],
                 data["current_pension_value"],
@@ -1888,13 +1548,12 @@ def pension_calculator_page():
                 st.info(f"{option_name}: {t('fund_value_at_date').format(check_date.strftime('%B %Y'))} = CHF {value:,.2f}")
             else:
                 st.warning(f"{option_name}: {t('no_data_available')}")
-    st.markdown('</div>', unsafe_allow_html=True)
     
     if simulations:
-        # Combine all simulations
+        # Combined dataframe
         combined_df = pd.concat(simulations)
         
-        # Display final values for each option
+        # Final Values
         st.subheader(t("final_values"))
         final_values = []
         for sim in simulations:
@@ -1903,174 +1562,94 @@ def pension_calculator_page():
             final_values.append({"Option": option_name, "Final Value": final_value})
         
         final_values_df = pd.DataFrame(final_values)
-        
-        # Add CSS for better table printing
-        st.markdown("""
-            <style>
-            .dataframe {
-                page-break-inside: avoid !important;
-            }
-            .dataframe thead {
-                display: table-header-group !important;
-            }
-            </style>
-        """, unsafe_allow_html=True)
-        
         st.dataframe(final_values_df.style.format({"Final Value": "CHF {:,.0f}"}))
         
-        create_comparison_chart(simulations)
+        # Comparison Chart
+        st.subheader(t("fund_growth_comparison"))
         
-        # Option selector (wrapped in hide-from-print)
-        st.markdown('<div class="hide-from-print">', unsafe_allow_html=True)
+        fig = px.line(combined_df, x="Age", y="Fund Value", color="Option",
+                    title=t("fund_growth_comparison"),
+                    labels={"Fund Value": t("total_fund_value"), "Age": t("age")})
         
-        # Generate a unique key for this selectbox
-        select_key = f"option_selector_{st.session_state.get('page_id', 0)}"
-        
-        selected_option = st.selectbox(
-            t("select_option"),
-            [sim["Option"].iloc[0] for sim in simulations],
-            key=select_key
+        fig.update_traces(
+            hovertemplate=f'{t("age")}: %{{x}}<br>{t("year")}: %{{customdata}}<br>{t("fund_value")}: CHF %{{y:,.0f}}'
         )
-        st.markdown('</div>', unsafe_allow_html=True)
+        fig.update_layout(
+            hovermode="x unified",
+            height=500
+        )
+        fig.update_traces(customdata=combined_df["Year"])
         
-        # Generate detailed view for the selected option
-        # Important: This is in a separate container from the selector
-        st.markdown(f'<div class="selected-option-details" id="detail-{selected_option}">', unsafe_allow_html=True)
-        selected_sim = next(sim for sim in simulations if sim["Option"].iloc[0] == selected_option)
+        st.plotly_chart(fig, use_container_width=True)
         
-        # Detailed table
-        st.subheader(f"{t('detailed_projection')} {selected_option}")
-
-        # Format the table differently for monthly vs yearly view
-        if is_monthly:
-            detailed_df = selected_sim.copy()
+        # Display all three options
+        for i, sim in enumerate(simulations):
+            option_name = sim["Option"].iloc[0]
             
-            # Format month display with special handling for 13th month
-            def format_month(row):
-                if row["Is13thMonth"]:
-                    # Format based on language
-                    year = row["Year"]
-                    if st.session_state.language == "de":
-                        return f"13er {year}"
-                    elif st.session_state.language == "fr":
-                        return f"13e {year}"
-                    elif st.session_state.language == "it":
-                        return f"13a {year}"
-                    else:  # default/english
-                        return f"13th {year}"
-                else:
-                    return row["Date"].strftime("%b %Y")
+            st.subheader(f"{t('detailed_projection')} {option_name}")
             
-            detailed_df["Month"] = detailed_df.apply(format_month, axis=1)
-            columns_to_show = ["Month", "Age", "Salary", "Insurable Salary", "Personal Contribution", "Employer Contribution", "Total Contribution", "Fund Value"]
-        else:
-            detailed_df = selected_sim.copy()
-            detailed_df["Year"] = detailed_df["Date"].dt.year
-            columns_to_show = ["Year", "Age", "Salary", "Insurable Salary", "Personal Contribution", "Employer Contribution", "Total Contribution", "Fund Value"]
-        
-        formatted_df = detailed_df[columns_to_show].style.format({
-            "Salary": "CHF {:,.0f}",
-            "Insurable Salary": "CHF {:,.0f}",
-            "Personal Contribution": "CHF {:,.0f}",
-            "Employer Contribution": "CHF {:,.0f}",
-            "Total Contribution": "CHF {:,.0f}",
-            "Fund Value": "CHF {:,.0f}"
-        })
-        
-        st.dataframe(formatted_df)
-        
-        # Create a unique ID for this chart to avoid duplicates
-        chart_id = f"contrib_chart_{selected_option}_{st.session_state.get('page_id', 0)}"
-        
-        # Contribution breakdown chart - IMPORTANT: Create with a unique ID
-        create_contribution_chart(selected_sim, selected_option)
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Print-only section: show all options (hidden in web view)
-        # IMPORTANT: Use a placeholder to keep this contained
-        print_container = st.empty()
-        with print_container:
-            st.markdown('<div class="print-all-options">', unsafe_allow_html=True)
-            # Sort simulations by option number to ensure they're printed in order 1-3
-            sorted_simulations = sorted(simulations, key=lambda x: x["Option"].iloc[0])
+            # Format the table
+            if is_monthly:
+                detailed_df = sim.copy()
+                
+                # Format month display with special handling for 13th month
+                def format_month(row):
+                    if row["Is13thMonth"]:
+                        # Format based on language
+                        year = row["Year"]
+                        if st.session_state.language == "de":
+                            return f"13er {year}"
+                        elif st.session_state.language == "fr":
+                            return f"13e {year}"
+                        elif st.session_state.language == "it":
+                            return f"13a {year}"
+                        else:  # default/english
+                            return f"13th {year}"
+                    else:
+                        return row["Date"].strftime("%b %Y")
+                
+                detailed_df["Month"] = detailed_df.apply(format_month, axis=1)
+                columns_to_show = ["Month", "Age", "Salary", "Insurable Salary", "Personal Contribution", "Employer Contribution", "Total Contribution", "Fund Value"]
+            else:
+                detailed_df = sim.copy()
+                detailed_df["Year"] = detailed_df["Date"].dt.year
+                columns_to_show = ["Year", "Age", "Salary", "Insurable Salary", "Personal Contribution", "Employer Contribution", "Total Contribution", "Fund Value"]
             
-            for i, sim in enumerate(sorted_simulations):
-                option_name = sim["Option"].iloc[0]
-                st.subheader(f"{t('detailed_projection')} {option_name}")
-                
-                # Format the table differently for monthly vs yearly view
-                if is_monthly:
-                    detailed_df = sim.copy()
-                    
-                    # Format month display with special handling for 13th month
-                    def format_month(row):
-                        if row["Is13thMonth"]:
-                            # Format based on language
-                            year = row["Year"]
-                            if st.session_state.language == "de":
-                                return f"13er {year}"
-                            elif st.session_state.language == "fr":
-                                return f"13e {year}"
-                            elif st.session_state.language == "it":
-                                return f"13a {year}"
-                            else:  # default/english
-                                return f"13th {year}"
-                        else:
-                            return row["Date"].strftime("%b %Y")
-                    
-                    detailed_df["Month"] = detailed_df.apply(format_month, axis=1)
-                    columns_to_show = ["Month", "Age", "Salary", "Insurable Salary", "Personal Contribution", "Employer Contribution", "Total Contribution", "Fund Value"]
-                else:
-                    detailed_df = sim.copy()
-                    detailed_df["Year"] = detailed_df["Date"].dt.year
-                    columns_to_show = ["Year", "Age", "Salary", "Insurable Salary", "Personal Contribution", "Employer Contribution", "Total Contribution", "Fund Value"]
-                
-                formatted_df = detailed_df[columns_to_show].style.format({
-                    "Salary": "CHF {:,.0f}",
-                    "Insurable Salary": "CHF {:,.0f}",
-                    "Personal Contribution": "CHF {:,.0f}",
-                    "Employer Contribution": "CHF {:,.0f}",
-                    "Total Contribution": "CHF {:,.0f}",
-                    "Fund Value": "CHF {:,.0f}"
-                })
-                
-                st.dataframe(formatted_df)
-                
-                # Use a unique ID for each print chart to avoid conflicts
-                print_chart_id = f"print_chart_{i}_{st.session_state.get('page_id', 0)}"
-                
-                # Contribution breakdown chart for print
-                print_fig = go.Figure()
-                print_fig.add_trace(go.Bar(
-                    x=sim["Age"],
-                    y=sim["Personal Contribution"],
-                    name=t("personal_contribution"),
-                    marker_color='#1f77b4'  # Consistent blue color
-                ))
-                print_fig.add_trace(go.Bar(
-                    x=sim["Age"],
-                    y=sim["Employer Contribution"],
-                    name=t("employer_contribution"),
-                    marker_color='#72b7ec'  # Consistent light blue color
-                ))
-                print_fig.update_layout(
-                    barmode="stack",
-                    title=f"{t('annual_contributions')} - {option_name}",
-                    xaxis_title=t("age"),
-                    yaxis_title=t("total_contribution"),
-                    hovermode="x unified",
-                    plot_bgcolor='white',
-                    paper_bgcolor='white'
-                )
-                
-                # Use config to prevent auto-resizing and keep static rendering
-                st.plotly_chart(print_fig, use_container_width=True, config={
-                    'responsive': False,
-                    'displayModeBar': False,
-                    'staticPlot': True  # Make it static for printing
-                })
-                
-            st.markdown('</div>', unsafe_allow_html=True)
+            formatted_df = detailed_df[columns_to_show].style.format({
+                "Salary": "CHF {:,.0f}",
+                "Insurable Salary": "CHF {:,.0f}",
+                "Personal Contribution": "CHF {:,.0f}",
+                "Employer Contribution": "CHF {:,.0f}",
+                "Total Contribution": "CHF {:,.0f}",
+                "Fund Value": "CHF {:,.0f}"
+            })
+            
+            st.dataframe(formatted_df)
+            
+            # Contribution breakdown chart
+            fig = go.Figure()
+            fig.add_trace(go.Bar(
+                x=sim["Age"],
+                y=sim["Personal Contribution"],
+                name=t("personal_contribution"),
+                marker_color='#1f77b4'
+            ))
+            fig.add_trace(go.Bar(
+                x=sim["Age"],
+                y=sim["Employer Contribution"],
+                name=t("employer_contribution"),
+                marker_color='#72b7ec'
+            ))
+            fig.update_layout(
+                barmode="stack",
+                title=f"{t('annual_contributions')} - {option_name}",
+                xaxis_title=t("age"),
+                yaxis_title=t("total_contribution"),
+                hovermode="x unified",
+                height=400
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning(t("no_data_available"))
 
@@ -2239,12 +1818,6 @@ def comparison_page():
     fig_bar.update_traces(texttemplate='CHF %{y:,.0f}', textposition='outside')
     st.plotly_chart(fig_bar, use_container_width=True)
     
-    # Add print button (visible only in web view)
-    st.markdown(
-        '<div class="hide-from-print"><button class="print-button" onclick="window.print()">Print Report</button></div>', 
-        unsafe_allow_html=True
-    )
-
     # Line chart comparison over time
     fig_line = px.line(
         comparison_df,

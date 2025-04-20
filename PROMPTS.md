@@ -142,3 +142,42 @@ Example of unwanted element's paths:
 #root > div:nth-child(1) > div.withScreencast > div > div > div > section.main.st-emotion-cache-bm2z3a.ea3mdgi8 > div.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 > div > div > div > div.element-container.st-emotion-cache-7l5wbv.e1f1d6gn4
 with an attribute class="element-container st-emotion-cache-7l5wbv e1f1d6gn4"
 and some HTML
+
+## Prompt 17
+Provided is a python app. All the interactions are working properly, but the print view is returning some terribly formatted output.
+
+Correct the app so that the print output is nicer. The following elements should be shown (in this order):
+1. Simulation Results
+   1. Final Pension Values at Retirement (table)
+2. Pension Fund Growth Comparison
+3. Detailed Projection for Option 1
+4. Detailed Projection for Option 2
+5. Detailed Projection for Option 3
+
+You should also make sure that graphs are NEVER split between two pages, and ideally that tables are also not split between two pages (and if they are, because they are longer than a single page, the headers should repeat on the first line of the new page).
+
+Return only the changed portions of code.
+
+## Prompt 18
+Here is a python app. I want you to focus on the print function and change the app in the following manner:
+
+* Remove the "Print Report" button at the end of the page. All print should be done by the user using their web browser.
+* Always display all three detailed options (and their respective charts) on the "Pension Calculator" page.
+* Remove the "Select an option to view details" feature from the "Pension Calculator" page.
+* Currently the navigation is not working, all pages lead to/display the "Pension Calculator" page. Fix this.
+* Make the navigation the first item of the sidebar, before language selection.
+* Make sure that printing the page with the browser gives a nicely formatted output:
+   * Remove all the unnecessary titles and text from the output (for example "Pension Calculator", "Personal Information", "Salary Information", "Bonus Settings", "Contribution Options"...)
+   * Make sure the "Final Pension Values at Retirement" table and "Pension Fund Growth Comparison" chart are displayed on the first page.
+   * Pages 2 to 4 should display the "Detailed Projection for Option X", with Option 1 being on page 2, Option 2 on page 3, and Option 3 on page 4. Make sure each option nicely fits on one single page.
+
+Return only the changed portions of code. Return whole functions and not parts.
+
+## Prompt 19
+The app is now severely broken. Here is the code in its current state. Let us simplify this:
+* I want you to remove all formatting and javascript done for printing and keep the formatting to a bare minimum for the web app.
+* The "Pension Calculator" page should always display the three detailed options (in order from 1 to 3)
+* The "Employer Contributions", "Coordination Fee", "Degree of Occupation" should work again (currently blank)
+* The other pages ("Plan Management" and "Comparison") should work again.
+
+Return only the changed portions of code. Return whole functions and not parts.
