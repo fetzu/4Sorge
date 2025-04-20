@@ -181,3 +181,34 @@ The app is now severely broken. Here is the code in its current state. Let us si
 * The other pages ("Plan Management" and "Comparison") should work again.
 
 Return only the changed portions of code. Return whole functions and not parts.
+
+## Prompt 20
+Provided is a python app with streamlit.
+
+I want you to make the print output (through the browser or system's "Print" menu, no need to add buttons to the interface) look a certain way.
+1. It should contain ONLY the following sections:
+   1. Final Pension Values at Retirement
+   2. Pension Fund Growth Comparison (with chart)
+   3. Detailed Projection for Option 1 (with table)
+   4. Annual Contributions - Option 1 (graph)
+   5. Detailed Projection for Option 2 (with table)
+   6. Annual Contributions - Option 2 (graph)
+   7. Detailed Projection for Option 3 (with table)
+   8. Annual Contributions - Option 3 (graph)
+2. Sections 1 and 2 shall be on page 1.
+3. Sections 3 and 4 shall be on page 2.
+4. Sections 5 and 6 shall be on page 3.
+5. Sections 7 and 8 shall be on page 4.
+6. The graphs and tables shall have margins on both the left and the right side of the page.
+7. The tables shall be displayed in full. If they have to be split between multiple pages for length, make sure that the table headers are repeated on the top of each new page.
+
+Do not change anything else. Return only the changed portions of code. Return whole functions and not parts.
+
+# Prompt 21
+The app is working (full code provided again with current state).
+
+I need you to do the following:
+* Move the "Print Report" section from the "Pension Calculator" page to the sidebar. It should be placed before data management.
+* Make sure the texts for "Print Report" are translated and available in German, French and Italian as well.
+
+Return only changed functions. You can return just the new translation keys to add to "TRANSLATIONS".

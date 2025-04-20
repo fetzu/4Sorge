@@ -175,7 +175,12 @@ TRANSLATIONS = {
         "data_uploaded": "Data successfully uploaded!",
         "invalid_data": "The uploaded file contains invalid data. Please ensure it's a valid 4Sorge JSON file.",
         "data_privacy": "Data Privacy",
-        "data_privacy_message": "Your data is processed on the application server only while you are actively using this app. It is not permanently stored or shared."
+        "data_privacy_message": "Your data is processed on the application server only while you are actively using this app. It is not permanently stored or shared.",
+        "print_report": "Print Report",
+        "download_report": "Download Printable Report",
+        "print_instructions_1": "1. Click the link above to download the report",
+        "print_instructions_2": "2. Open the HTML file in your browser",
+        "print_instructions_3": "3. Use your browser's print function (Ctrl+P or Cmd+P) to print the document"
     },
     "de": {
         "app_title": "4Sorge - Pensionskassen-Simulator",
@@ -283,7 +288,12 @@ TRANSLATIONS = {
         "data_uploaded": "Daten erfolgreich hochgeladen!",
         "invalid_data": "Die hochgeladene Datei enthält ungültige Daten. Bitte stellen Sie sicher, dass es sich um eine gültige 4Sorge-JSON-Datei handelt.",
         "data_privacy": "Datenschutz",
-        "data_privacy_message": "Ihre Daten werden nur während der aktiven Nutzung dieser App auf dem Anwendungsserver verarbeitet. Sie werden nicht dauerhaft gespeichert oder geteilt."
+        "data_privacy_message": "Ihre Daten werden nur während der aktiven Nutzung dieser App auf dem Anwendungsserver verarbeitet. Sie werden nicht dauerhaft gespeichert oder geteilt.",
+        "print_report": "Bericht drucken",
+        "download_report": "Druckbaren Bericht herunterladen",
+        "print_instructions_1": "1. Klicken Sie auf den obigen Link, um den Bericht herunterzuladen",
+        "print_instructions_2": "2. Öffnen Sie die HTML-Datei in Ihrem Browser",
+        "print_instructions_3": "3. Verwenden Sie die Druckfunktion Ihres Browsers (Strg+P oder Cmd+P), um das Dokument zu drucken"
     },
     "fr": {
         "app_title": "4Sorge - Simulateur de caisse de pension",
@@ -391,7 +401,12 @@ TRANSLATIONS = {
         "data_uploaded": "Données téléchargées avec succès !",
         "invalid_data": "Le fichier téléchargé contient des données invalides. Veuillez vous assurer qu'il s'agit d'un fichier JSON 4Sorge valide.",
         "data_privacy": "Confidentialité des données",
-        "data_privacy_message": "Vos données sont traitées sur le serveur d'application uniquement pendant que vous utilisez activement cette application. Elles ne sont pas stockées de manière permanente ni partagées."
+        "data_privacy_message": "Vos données sont traitées sur le serveur d'application uniquement pendant que vous utilisez activement cette application. Elles ne sont pas stockées de manière permanente ni partagées.",
+        "print_report": "Imprimer le rapport",
+        "download_report": "Télécharger le rapport imprimable",
+        "print_instructions_1": "1. Cliquez sur le lien ci-dessus pour télécharger le rapport",
+        "print_instructions_2": "2. Ouvrez le fichier HTML dans votre navigateur",
+        "print_instructions_3": "3. Utilisez la fonction d'impression de votre navigateur (Ctrl+P ou Cmd+P) pour imprimer le document"
     },
     "it": {
         "app_title": "4Sorge - Simulatore di fondi pensione",
@@ -499,7 +514,12 @@ TRANSLATIONS = {
         "data_uploaded": "Dati caricati con successo!",
         "invalid_data": "Il file caricato contiene dati non validi. Assicurati che sia un file JSON 4Sorge valido.",
         "data_privacy": "Privacy dei dati",
-        "data_privacy_message": "I Suoi dati vengono elaborati sul server dell'applicazione solo durante l'utilizzo attivo di questa app. Non vengono memorizzati in modo permanente né condivisi."
+        "data_privacy_message": "I Suoi dati vengono elaborati sul server dell'applicazione solo durante l'utilizzo attivo di questa app. Non vengono memorizzati in modo permanente né condivisi.",
+        "print_report": "Stampa rapporto",
+        "download_report": "Scarica rapporto stampabile",
+        "print_instructions_1": "1. Clicca sul link sopra per scaricare il rapporto",
+        "print_instructions_2": "2. Apri il file HTML nel tuo browser",
+        "print_instructions_3": "3. Utilizza la funzione di stampa del tuo browser (Ctrl+P o Cmd+P) per stampare il documento"
     }
 }
 
@@ -844,7 +864,7 @@ def simulate_pension(birth_date, retirement_age, current_salary, max_salary, yea
         return df
 
 def get_print_css():
-    """Return basic CSS styling without complex print formatting."""
+    """Return minimal CSS styling for the app"""
     return """
         <style>
         /* Basic styling for the app */
@@ -852,22 +872,227 @@ def get_print_css():
             width: 100%;
             max-width: 100%;
         }
-        
-        /* Basic print styling */
-        @media print {
-            /* Hide Streamlit UI elements */
-            header, footer, .stSidebar, button {
-                display: none !important;
-            }
-            
-            /* Hide input elements */
-            .stTextInput, .stSelectbox, .stNumberInput, .stRadio, 
-            .stCheckbox, .stSlider, .stDateInput {
-                display: none !important;
-            }
-        }
         </style>
     """
+
+def generate_printable_html(simulations, is_monthly=False):
+    """
+    Generate a standalone HTML document for printing
+    
+    Parameters:
+    - simulations: List of DataFrames with simulation results
+    - is_monthly: Whether the view is monthly or yearly
+    
+    Returns:
+    - HTML string of the printable document
+    """
+    if not simulations:
+        return None
+    
+    # Prepare data for each section
+    final_values_data = []
+    for sim in simulations:
+        final_value = sim["Fund Value"].iloc[-1]
+        option_name = sim["Option"].iloc[0]
+        final_values_data.append({"Option": option_name, "Final Value": final_value})
+    
+    # Convert to HTML tables
+    final_values_df = pd.DataFrame(final_values_data)
+    final_values_html = final_values_df.style.format({"Final Value": "CHF {:,.0f}"}).to_html()
+    
+    # Create detailed tables for each option
+    detailed_tables = []
+    for sim in simulations:
+        option_name = sim["Option"].iloc[0]
+        
+        # Format the table
+        if is_monthly:
+            detailed_df = sim.copy()
+            
+            # Format month display with special handling for 13th month
+            def format_month(row):
+                if row.get("Is13thMonth", False):
+                    # Format based on language
+                    year = row["Year"]
+                    if st.session_state.language == "de":
+                        return f"13er {year}"
+                    elif st.session_state.language == "fr":
+                        return f"13e {year}"
+                    elif st.session_state.language == "it":
+                        return f"13a {year}"
+                    else:  # default/english
+                        return f"13th {year}"
+                else:
+                    return row["Date"].strftime("%b %Y")
+            
+            detailed_df["Month"] = detailed_df.apply(format_month, axis=1)
+            columns_to_show = ["Month", "Age", "Salary", "Insurable Salary", "Personal Contribution", "Employer Contribution", "Total Contribution", "Fund Value"]
+        else:
+            detailed_df = sim.copy()
+            detailed_df["Year"] = detailed_df["Date"].dt.year
+            columns_to_show = ["Year", "Age", "Salary", "Insurable Salary", "Personal Contribution", "Employer Contribution", "Total Contribution", "Fund Value"]
+        
+        formatted_df = detailed_df[columns_to_show].style.format({
+            "Salary": "CHF {:,.0f}",
+            "Insurable Salary": "CHF {:,.0f}",
+            "Personal Contribution": "CHF {:,.0f}",
+            "Employer Contribution": "CHF {:,.0f}",
+            "Total Contribution": "CHF {:,.0f}",
+            "Fund Value": "CHF {:,.0f}"
+        })
+        
+        table_html = formatted_df.to_html()
+        detailed_tables.append((option_name, table_html))
+    
+    # Generate charts for comparison and each option
+    import io
+    import base64
+    import plotly.io as pio
+    
+    # Comparison chart
+    combined_df = pd.concat(simulations)
+    fig_comparison = px.line(combined_df, x="Age", y="Fund Value", color="Option",
+                title=t("fund_growth_comparison"),
+                labels={"Fund Value": t("total_fund_value"), "Age": t("age")})
+    
+    fig_comparison.update_layout(
+        height=500,
+        margin=dict(l=50, r=50, t=80, b=50),
+        paper_bgcolor='white',
+        plot_bgcolor='white'
+    )
+    
+    comparison_chart_img = pio.to_image(fig_comparison, format="png", width=800, height=400)
+    comparison_chart_base64 = base64.b64encode(comparison_chart_img).decode('utf-8')
+    
+    # Contribution charts
+    contribution_charts = []
+    for sim in simulations:
+        option_name = sim["Option"].iloc[0]
+        
+        fig = go.Figure()
+        fig.add_trace(go.Bar(
+            x=sim["Age"],
+            y=sim["Personal Contribution"],
+            name=t("personal_contribution"),
+            marker_color='#1f77b4'
+        ))
+        fig.add_trace(go.Bar(
+            x=sim["Age"],
+            y=sim["Employer Contribution"],
+            name=t("employer_contribution"),
+            marker_color='#72b7ec'
+        ))
+        fig.update_layout(
+            barmode="stack",
+            title=f"{t('annual_contributions')} - {option_name}",
+            xaxis_title=t("age"),
+            yaxis_title=t("total_contribution"),
+            height=400,
+            margin=dict(l=50, r=50, t=80, b=50),
+            paper_bgcolor='white',
+            plot_bgcolor='white'
+        )
+        
+        chart_img = pio.to_image(fig, format="png", width=800, height=400)
+        chart_base64 = base64.b64encode(chart_img).decode('utf-8')
+        contribution_charts.append((option_name, chart_base64))
+    
+    # Build the complete HTML document with proper page breaks
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Pension Fund Report</title>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+            }}
+            .page {{
+                page-break-after: always;
+                padding: 20px 30px;
+            }}
+            .last-page {{
+                padding: 20px 30px;
+            }}
+            h1 {{
+                font-size: 24px;
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }}
+            h2 {{
+                font-size: 20px;
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }}
+            table {{
+                width: calc(100% - 40px);
+                margin: 20px auto;
+                border-collapse: collapse;
+            }}
+            th, td {{
+                padding: 8px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }}
+            th {{
+                background-color: #f2f2f2;
+            }}
+            img {{
+                max-width: calc(100% - 40px);
+                height: auto;
+                margin: 20px auto;
+                display: block;
+            }}
+            @media print {{
+                table thead {{
+                    display: table-header-group;
+                }}
+                table tfoot {{
+                    display: table-footer-group;
+                }}
+            }}
+        </style>
+    </head>
+    <body>
+        <!-- Page 1: Final Values and Comparison Chart -->
+        <div class="page">
+            <h1>{t("final_values")}</h1>
+            {final_values_html}
+            
+            <h1>{t("fund_growth_comparison")}</h1>
+            <img src="data:image/png;base64,{comparison_chart_base64}" alt="Comparison Chart">
+        </div>
+    """
+    
+    # Add pages for each option (2, 3, 4)
+    for i, ((option_name, table_html), (_, chart_base64)) in enumerate(zip(detailed_tables, contribution_charts)):
+        page_class = "page" if i < len(detailed_tables) - 1 else "last-page"
+        html += f"""
+        <div class="{page_class}">
+            <h1>{t("detailed_projection")} {option_name}</h1>
+            {table_html}
+            
+            <h1>{t("annual_contributions")} - {option_name}</h1>
+            <img src="data:image/png;base64,{chart_base64}" alt="Contributions Chart for {option_name}">
+        </div>
+        """
+    
+    html += """
+    </body>
+    </html>
+    """
+    
+    return html
+
+def create_download_link(html, filename="pension_report.html"):
+    """Create a download link for the HTML file"""
+    import base64
+    b64 = base64.b64encode(html.encode()).decode()
+    href = f'<a href="data:text/html;base64,{b64}" download="{filename}" target="_blank">{t("download_report")}</a>'
+    return href
 
 # Modify the chart creation functions to improve stability
 def create_stable_plotly_chart(fig, container_id=None, use_container_width=True, static_plot=False):
@@ -1055,6 +1280,27 @@ def main():
         menu_options
     )
     
+    # Render the appropriate page to get simulations
+    if selected_menu == t("pension_calculator"):
+        simulations = pension_calculator_page()
+    elif selected_menu == t("plan_management"):
+        simulations = []  # No simulations on this page
+        plan_management_page()
+    elif selected_menu == t("comparison"):
+        simulations = []  # No simulations on this page
+        comparison_page()
+    
+    # Print Report section in sidebar (before data management)
+    if simulations:
+        st.sidebar.markdown("---")
+        st.sidebar.header(t("print_report"))
+        printable_html = generate_printable_html(simulations, is_monthly=(selected_menu == t("pension_calculator") and "is_monthly" in st.session_state and st.session_state.is_monthly))
+        download_link = create_download_link(printable_html)
+        st.sidebar.markdown(download_link, unsafe_allow_html=True)
+        st.sidebar.markdown(t("print_instructions_1"))
+        st.sidebar.markdown(t("print_instructions_2"))
+        st.sidebar.markdown(t("print_instructions_3"))
+    
     # Data management section in sidebar
     st.sidebar.markdown("---")
     st.sidebar.header(t("data_management"))
@@ -1083,18 +1329,10 @@ def main():
             st.sidebar.error(t("invalid_data"))
             # Reset the flag so user can try again
             st.session_state.file_processed = False
-    
-    # Render the appropriate page
-    if selected_menu == t("pension_calculator"):
-        pension_calculator_page()
-    elif selected_menu == t("plan_management"):
-        plan_management_page()
-    elif selected_menu == t("comparison"):
-        comparison_page()
 
 def pension_calculator_page():
     """
-    Simplified pension calculator page that always shows all three options
+    Pension calculator page with standalone printable report
     """
     # Access data from session state
     data = st.session_state.pension_data
@@ -1215,6 +1453,8 @@ def pension_calculator_page():
             label_visibility="collapsed"  # Hide the label since we have the subheader
         )
         is_monthly = view_toggle == t("monthly")
+        # Store is_monthly in session state for use in the sidebar
+        st.session_state.is_monthly = is_monthly
     
     with col2:
         # Pension fund info section
@@ -1594,7 +1834,7 @@ def pension_calculator_page():
                 
                 # Format month display with special handling for 13th month
                 def format_month(row):
-                    if row["Is13thMonth"]:
+                    if row.get("Is13thMonth", False):
                         # Format based on language
                         year = row["Year"]
                         if st.session_state.language == "de":
@@ -1652,6 +1892,9 @@ def pension_calculator_page():
             st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning(t("no_data_available"))
+    
+    # Return simulations for use in the sidebar
+    return simulations
 
 def plan_management_page():
     # Access data from session state
