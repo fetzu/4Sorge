@@ -8,15 +8,13 @@ import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
 import json
-import os
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 import numpy as np
-from io import BytesIO
+from io import BytesIO, StringIO
 import base64
 
 # Constants
-DATA_FILE = "pension_data.json"
 DEFAULT_PENSION_DATA = {
     "current_pension_value": 0,
     "current_value_date": date.today().isoformat(),
@@ -168,7 +166,16 @@ TRANSLATIONS = {
         "select_month_year": "Select month and year to check fund value",
         "show_value": "Show Value",
         "fund_value_at_date": "Fund value at {0}",
-        "insurable_salary": "Insurable Salary"
+        "insurable_salary": "Insurable Salary",
+        "download_data": "Download Data",
+        "upload_data": "Upload Data",
+        "data_management": "Data Management",
+        "export_data": "Export data as JSON file to save all your settings and plans",
+        "import_data": "Import data from a previously exported JSON file",
+        "data_uploaded": "Data successfully uploaded!",
+        "invalid_data": "The uploaded file contains invalid data. Please ensure it's a valid 4Sorge JSON file.",
+        "data_privacy": "Data Privacy",
+        "data_privacy_message": "Your data is processed on the application server only while you are actively using this app. It is not permanently stored or shared."
     },
     "de": {
         "app_title": "4Sorge - Pensionskassen-Simulator",
@@ -267,7 +274,16 @@ TRANSLATIONS = {
         "select_month_year": "Monat und Jahr auswählen, um den Kassenwert zu prüfen",
         "show_value": "Wert anzeigen",
         "fund_value_at_date": "Kassenwert am {0}",
-        "insurable_salary": "Versichertes Gehalt"
+        "insurable_salary": "Versichertes Gehalt",
+        "download_data": "Daten herunterladen",
+        "upload_data": "Daten hochladen",
+        "data_management": "Datenverwaltung",
+        "export_data": "Daten als JSON-Datei exportieren, um alle Einstellungen und Pläne zu speichern",
+        "import_data": "Daten aus einer zuvor exportierten JSON-Datei importieren",
+        "data_uploaded": "Daten erfolgreich hochgeladen!",
+        "invalid_data": "Die hochgeladene Datei enthält ungültige Daten. Bitte stellen Sie sicher, dass es sich um eine gültige 4Sorge-JSON-Datei handelt.",
+        "data_privacy": "Datenschutz",
+        "data_privacy_message": "Ihre Daten werden nur während der aktiven Nutzung dieser App auf dem Anwendungsserver verarbeitet. Sie werden nicht dauerhaft gespeichert oder geteilt."
     },
     "fr": {
         "app_title": "4Sorge - Simulateur de caisse de pension",
@@ -366,7 +382,16 @@ TRANSLATIONS = {
         "select_month_year": "Sélectionnez le mois et l'année pour vérifier la valeur de la caisse",
         "show_value": "Afficher la valeur",
         "fund_value_at_date": "Valeur de la caisse au {0}",
-        "insurable_salary": "Salaire assuré"
+        "insurable_salary": "Salaire assuré",
+        "download_data": "Télécharger les données",
+        "upload_data": "Charger les données",
+        "data_management": "Gestion des données",
+        "export_data": "Exporter les données en fichier JSON pour sauvegarder tous vos paramètres et plans",
+        "import_data": "Importer les données d'un fichier JSON exporté précédemment",
+        "data_uploaded": "Données téléchargées avec succès !",
+        "invalid_data": "Le fichier téléchargé contient des données invalides. Veuillez vous assurer qu'il s'agit d'un fichier JSON 4Sorge valide.",
+        "data_privacy": "Confidentialité des données",
+        "data_privacy_message": "Vos données sont traitées sur le serveur d'application uniquement pendant que vous utilisez activement cette application. Elles ne sont pas stockées de manière permanente ni partagées."
     },
     "it": {
         "app_title": "4Sorge - Simulatore di fondi pensione",
@@ -465,7 +490,16 @@ TRANSLATIONS = {
         "select_month_year": "Seleziona mese e anno per verificare il valore del fondo",
         "show_value": "Mostra valore",
         "fund_value_at_date": "Valore del fondo al {0}",
-        "insurable_salary": "Salario assicurato"
+        "insurable_salary": "Salario assicurato",
+        "download_data": "Scarica dati",
+        "upload_data": "Carica dati",
+        "data_management": "Gestione dati",
+        "export_data": "Esporta i dati come file JSON per salvare tutte le impostazioni e i piani",
+        "import_data": "Importa i dati da un file JSON esportato in precedenza",
+        "data_uploaded": "Dati caricati con successo!",
+        "invalid_data": "Il file caricato contiene dati non validi. Assicurati che sia un file JSON 4Sorge valido.",
+        "data_privacy": "Privacy dei dati",
+        "data_privacy_message": "I Suoi dati vengono elaborati sul server dell'applicazione solo durante l'utilizzo attivo di questa app. Non vengono memorizzati in modo permanente né condivisi."
     }
 }
 
@@ -481,47 +515,58 @@ def t(key):
     """Get translation for the current language"""
     return TRANSLATIONS.get(st.session_state.get('language', 'en'), {}).get(key, key)
 
+# Initialize session state with default data if not present
+if 'pension_data' not in st.session_state:
+    st.session_state.pension_data = DEFAULT_PENSION_DATA.copy()
+
+# Initialize language in session state if not present
+if 'language' not in st.session_state:
+    st.session_state.language = st.session_state.pension_data.get('language', 'en')
+
 # Data management functions
-def load_data():
-    """Load pension data from JSON file or create default if not exists."""
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r") as f:
-            data = json.load(f)
-            # Convert date strings back to date objects for non-pension plan data
-            data["current_value_date"] = data.get("current_value_date", date.today().isoformat())
+def export_data():
+    """Create a downloadable JSON file of current data."""
+    data_json = json.dumps(st.session_state.pension_data, indent=4, default=str)
+    b64 = base64.b64encode(data_json.encode()).decode()
+    return f"data:application/json;base64,{b64}"
+
+def import_data(uploaded_file):
+    """Import data from uploaded JSON file."""
+    try:
+        ## Add debug output
+        #st.sidebar.write("Debug: Reading file...")
+        
+        content = uploaded_file.read()
+        data = json.loads(content)
+        
+        # Validate the data structure
+        required_keys = ["birth_date", "retirement_age", "current_salary", "personal_contribution_ranges", "employer_contributions"]
+        
+        ## More debug info
+        #st.sidebar.write(f"Debug: Keys found: {list(data.keys())}")
+        
+        if all(key in data for key in required_keys):
+            ## Debug before updating state
+            #st.sidebar.write("Debug: Data valid, updating session state...")
             
-            # Migrate old format to new format if necessary
-            if "personal_contribution_options" in data and isinstance(data["personal_contribution_options"], list):
-                # Convert old simple list to new ranges format
-                if isinstance(data["personal_contribution_options"][0], (int, float)):
-                    default_ranges = DEFAULT_PENSION_DATA["personal_contribution_ranges"]
-                    for i, default_range in enumerate(default_ranges):
-                        if i < len(data["personal_contribution_options"]):
-                            default_range["options"][1] = data["personal_contribution_options"][i]
-                    data["personal_contribution_ranges"] = default_ranges
-                    del data["personal_contribution_options"]
-                    
-            # Ensure coordination fees and occupation levels exist
-            if "coordination_fees" not in data:
-                data["coordination_fees"] = DEFAULT_PENSION_DATA["coordination_fees"]
-            if "occupation_levels" not in data:
-                data["occupation_levels"] = DEFAULT_PENSION_DATA["occupation_levels"]
-    else:
-        data = DEFAULT_PENSION_DATA.copy()
-    
-    # Initialize language in session state if not present
-    if 'language' not in st.session_state:
-        st.session_state.language = data.get('language', 'en')
-    
-    return data
+            st.session_state.pension_data = data
+            
+            # Set processed flag to avoid refresh loop
+            st.session_state.file_processed = True
+            
+            return True
+        else:
+            missing_keys = [key for key in required_keys if key not in data]
+            #st.sidebar.write(f"Debug: Missing required keys: {missing_keys}")
+            return False
+    except json.JSONDecodeError as e:
+        #st.sidebar.write(f"Debug: JSON decode error: {str(e)}")
+        return False
+    except Exception as e:
+        #st.sidebar.write(f"Debug: Unexpected error: {str(e)}")
+        return False
 
-
-def save_data(data):
-    """Save pension data to JSON file."""
-    with open(DATA_FILE, "w") as f:
-        json.dump(data, f, indent=4)
-
-
+# Pension calculation functions remain the same
 def get_personal_contribution(age, personal_contribution_ranges, option_index):
     """Get personal contribution percentage for a specific age and option."""
     for range_data in personal_contribution_ranges:
@@ -1000,7 +1045,6 @@ def get_fund_value_at_date(simulation_df, target_date):
     
     return closest_row['Fund Value']
 
-
 # Streamlit app
 def main():
     st.set_page_config(
@@ -1008,27 +1052,60 @@ def main():
         page_icon="📈",
         layout="wide"
     )
-    
-    # Load data
-    data = load_data()
-    
+    # Add this callback flag code here
+    if 'file_processed' not in st.session_state:
+        st.session_state.file_processed = False
+        
     # Language selection in sidebar
     selected_language = st.sidebar.selectbox(
         "Language / Sprache / Langue / Lingua",
         options=list(LANGUAGES.keys()),
         format_func=lambda x: LANGUAGES[x],
-        index=list(LANGUAGES.keys()).index(data.get("language", "en")),
+        index=list(LANGUAGES.keys()).index(st.session_state.language),
         key="language_selector"
     )
     
-    if selected_language != data.get("language", "en"):
-        data["language"] = selected_language
+    if selected_language != st.session_state.language:
         st.session_state.language = selected_language
-        save_data(data)
-        st.rerun()  # Use st.rerun() instead of st.experimental_rerun()
+        st.session_state.pension_data["language"] = selected_language
+        st.rerun()
     
     st.title(t("app_title"))
     st.caption(t("app_subtitle"))
+    
+    # Add data privacy message
+    st.sidebar.info(t("data_privacy_message"))
+    
+    # Data management section in sidebar
+    st.sidebar.markdown("---")
+    st.sidebar.header(t("data_management"))
+    
+    # Export data button
+    st.sidebar.markdown(f"### {t('export_data')}")
+    download_link = export_data()
+    st.sidebar.markdown(
+        f'<a href="{download_link}" download="4sorge_data.json" class="stButton">{t("download_data")}</a>',
+        unsafe_allow_html=True
+    )
+    
+    # Import data button
+    st.sidebar.markdown(f"### {t('import_data')}")
+    uploaded_file = st.sidebar.file_uploader(t("upload_data"), type=['json'])
+
+    ## Add debug expander for session state
+    #with st.sidebar.expander("Debug: Session State"):
+    #    st.write({k: v for k, v in st.session_state.items() if k not in ['_is_running', '_script_run_ctx']})
+
+    # Use the file_processed flag to prevent infinite loops
+    if uploaded_file is not None and not st.session_state.file_processed:
+        # Process the file
+        if import_data(uploaded_file):
+            st.sidebar.success(t("data_uploaded"))
+            # DO NOT call st.rerun() here - it will cause the infinite loop
+        else:
+            st.sidebar.error(t("invalid_data"))
+            # Reset the flag so user can try again
+            st.session_state.file_processed = False
     
     # Print CSS
     st.markdown(get_print_css(), unsafe_allow_html=True)
@@ -1038,14 +1115,17 @@ def main():
     selected_menu = st.sidebar.selectbox(t("navigation"), menu_options)
     
     if selected_menu == t("pension_calculator"):
-        pension_calculator_page(data)
+        pension_calculator_page()
     elif selected_menu == t("plan_management"):
-        plan_management_page(data)
+        plan_management_page()
     elif selected_menu == t("comparison"):
-        comparison_page(data)
+        comparison_page()
 
 
-def pension_calculator_page(data):
+def pension_calculator_page():
+    # Access data from session state
+    data = st.session_state.pension_data
+    
     # Wrap header and configuration sections in hide-from-print divs
     st.markdown('<div class="hide-from-print">', unsafe_allow_html=True)
     
@@ -1385,8 +1465,8 @@ def pension_calculator_page(data):
             
             data["occupation_levels"] = occupation_levels
     
-    # Save updated data
-    save_data(data)
+    # Update session state
+    st.session_state.pension_data = data
     
     # End hide-from-print section
     st.markdown('</div>', unsafe_allow_html=True)
@@ -1625,7 +1705,10 @@ def pension_calculator_page(data):
     else:
         st.warning(t("no_data_available"))
 
-def plan_management_page(data):
+def plan_management_page():
+    # Access data from session state
+    data = st.session_state.pension_data
+    
     st.header(t("plan_management"))
     
     # List existing plans
@@ -1643,15 +1726,13 @@ def plan_management_page(data):
             with col1:
                 if st.button(t("delete_plan")):
                     del data["pension_plans"][selected_plan]
-                    save_data(data)
                     st.success(t("plan_deleted").format(selected_plan))
-                    st.rerun()  # Use st.rerun() instead of st.experimental_rerun()
+                    st.rerun()
             
             with col2:
                 if st.button(t("duplicate_plan")):
                     new_name = f"{selected_plan} (copy)"
                     data["pension_plans"][new_name] = plan_data.copy()
-                    save_data(data)
                     st.success(t("plan_duplicated").format(new_name))
             
             st.json(plan_data)
@@ -1681,7 +1762,6 @@ def plan_management_page(data):
                 "occupation_levels": data.get("occupation_levels", DEFAULT_PENSION_DATA["occupation_levels"])
             }
             data["pension_plans"][plan_name] = new_plan
-            save_data(data)
             st.success(t("plan_created").format(plan_name))
         elif not plan_name:
             st.error(t("enter_plan_name"))
@@ -1689,7 +1769,10 @@ def plan_management_page(data):
             st.error(t("plan_exists"))
 
 
-def comparison_page(data):
+def comparison_page():
+    # Access data from session state
+    data = st.session_state.pension_data
+    
     st.header(t("compare_pension_plans"))
     
     if not data["pension_plans"]:

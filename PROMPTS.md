@@ -89,3 +89,19 @@ Salary Information
 Bonus Settings
 Simulation Results"
 Make sure that only Final Pension Values at Retirement, Pension Fund Growth Comparison, and Detailed Projection for all options are printed.
+
+## Prompt 10
+If I deploy the app to streamlit (online), where would the data be stored?
+
+## Prompt 11
+Yes, modify the app with the option you suggested. Make sure no data is ever stored outside of the user's machine.
+
+## Prompt 12
+I have the following python app.
+
+The "import" of data does not seem to work properly: the app goes into an infinite refresh loop.
+
+I need you to help me troubleshoot the issue. Before making any code changes, what can I do to provide you with better logs/information?
+
+## Prompt 13 (new chat; also ran through Gemini 2.5 Pro)
+Can you analyse the following python app and make sure that indeed no data will leave the user's device EVEN IF it was deployed through the Streamlit Community Cloud?
