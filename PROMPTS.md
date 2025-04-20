@@ -105,3 +105,40 @@ I need you to help me troubleshoot the issue. Before making any code changes, wh
 
 ## Prompt 13 (new chat; also ran through Gemini 2.5 Pro)
 Can you analyse the following python app and make sure that indeed no data will leave the user's device EVEN IF it was deployed through the Streamlit Community Cloud?
+
+## Prompt 14
+I have provided you with a python app.
+
+It is still displaying some strange behavior with the "printing", I need you to correct the following issues:
+* Make sure the whole "Pension Calculator" section is not printed.
+* Make sure the "Check Fund Value at Specific Date" is not printed.
+* Make sure  the three "Detailed Projection for Option x" (1 to 3) are all printed out IN ORDER (1 to 3) regardless of the currently selected option for detail view by the user.
+* Make sure that the tables do not show up with opacity (example of "Annual Contributions - Option 1" in the second PDF provided) when printing.
+* The web view should only display the currently selected "Detailed Projection for Option" and NOT all of them.
+
+Return only changed parts of the code with instruction on which line to insert them to.
+
+## Prompt 15
+Provided is a python app.
+
+I need to you correct and implement the following changes:
+
+Currently, selecting an option for the "Select an option to view details" just adds the projection graph underneath the previously selected option. Which means if the user selects Option 1, then Option 2, then Option 3, then Option one again, the page will display the graph for Options 1 to 3 with a little opacity and then the one for Option 1 again (with normal colors). Make it so that selecting a new option from "Select an option to view details"  clears the previously selected graph/element before displaying the selected one. NOTE: this also happens on the other pages, where the graphs always stay there, sometimes at the very top of the page.
+
+Move the "Simulation Results" monthly/yearly "Toggle View" underneath the "Bonus Settings" section.
+
+When using the monthly view, the "Detailed Projection" table should show the bonus month (after December at the end of the year) as "13th YYYY" (German: "13er YYYY", French "13e YYYY" and Italian "13a YYYY").
+
+Return only changed parts of the code with instruction on which line to insert them to.
+
+## Prompt 16
+In the following python script, something is not working properly in the web interface: selecting an option for detailed view creates a chart which then won't go away and always show up with a bit of transparency on every page of the app (until the next refresh).
+
+Suggest the code changes necessary to fix this issue.
+
+Example of unwanted element's paths:
+#root > div:nth-child(1) > div.withScreencast > div > div > div > section.main.st-emotion-cache-bm2z3a.ea3mdgi8 > div.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 > div > div > div > div:nth-child(11)
+
+#root > div:nth-child(1) > div.withScreencast > div > div > div > section.main.st-emotion-cache-bm2z3a.ea3mdgi8 > div.block-container.st-emotion-cache-1jicfl2.ea3mdgi5 > div > div > div > div.element-container.st-emotion-cache-7l5wbv.e1f1d6gn4
+with an attribute class="element-container st-emotion-cache-7l5wbv e1f1d6gn4"
+and some HTML
