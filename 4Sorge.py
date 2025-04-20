@@ -1877,13 +1877,15 @@ def pension_calculator_page():
                 x=sim["Age"],
                 y=sim["Personal Contribution"],
                 name=t("personal_contribution"),
-                marker_color='#1f77b4'
+                marker_color='#1f77b4',
+                hovertemplate='CHF %{y:,.0f}<extra></extra>'  # Format hover text as CHF integers
             ))
             fig.add_trace(go.Bar(
                 x=sim["Age"],
                 y=sim["Employer Contribution"],
                 name=t("employer_contribution"),
-                marker_color='#72b7ec'
+                marker_color='#72b7ec',
+                hovertemplate='CHF %{y:,.0f}<extra></extra>'  # Format hover text as CHF integers
             ))
             fig.update_layout(
                 barmode="stack",
@@ -1891,7 +1893,10 @@ def pension_calculator_page():
                 xaxis_title=t("age"),
                 yaxis_title=t("total_contribution"),
                 hovermode="x unified",
-                height=400
+                height=400,
+                yaxis=dict(
+                    tickformat="CHF,.0f",  # Format y-axis ticks as CHF integers
+                )
             )
             
             st.plotly_chart(fig, use_container_width=True)
