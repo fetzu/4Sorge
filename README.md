@@ -1,5 +1,12 @@
 # 4Sorge - Pension Fund Simulator
 
+🇬🇧 TL;DR: play with your pension fund's outcome without any risk!  
+🇨🇭🇩🇪 TL;DR: Spiel mit dem Ergebnis deines Pensionsfonds ohne Risiko!  
+🇨🇭🇫🇷 TL;DR : jouez avec les résultats de votre fonds de pension sans aucun risque!  
+🇨🇭🇮🇹 TL;DR: gioca con il risultato del tuo fondo pensione senza alcun rischio!  
+
+[Online version on Streamlit](https://4sorge.streamlit.app).
+
 4Sorge is a comprehensive pension fund calculator that helps users simulate and compare different pension scenarios. The app provides a user-friendly web interface to visualize pension growth over time and compare different contribution strategies with Swiss market features.
 
 ## Features
