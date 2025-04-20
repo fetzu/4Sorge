@@ -595,7 +595,7 @@ def import_data(uploaded_file):
 def get_personal_contribution(age, personal_contribution_ranges, option_index):
     """Get personal contribution percentage for a specific age and option."""
     for range_data in personal_contribution_ranges:
-        if range_data["age_from"] <= age < range_data["age_to"]:
+        if range_data["age_from"] <= age <= range_data["age_to"]:
             if option_index < len(range_data["options"]):
                 return range_data["options"][option_index]
     return 0.0
@@ -603,7 +603,7 @@ def get_personal_contribution(age, personal_contribution_ranges, option_index):
 def get_employer_contribution(age, employer_contributions):
     """Get employer contribution percentage for a specific age."""
     for contrib in employer_contributions:
-        if contrib["age_from"] <= age < contrib["age_to"]:
+        if contrib["age_from"] <= age <= contrib["age_to"]:
             return contrib["percentage"]
     return 0.0
 
