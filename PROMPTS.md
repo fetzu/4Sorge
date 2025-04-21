@@ -336,3 +336,21 @@ Do not change anything else. Return only the changed portions of code. Return wh
 
 ## Prompt 26
 Is there a way to pre-compute the values instead and update the graphs and tables dynamically (without having to reload the page) when using the slider?
+
+## Prompt 27 (new chat)
+I have provided with a Python app and its README.
+
+Rewrite the README.md with the following considerations:
+* The document should be in 4 languages (English, German (Switzerland), French (Switzerland) and Italian (Switzerland)), in that order. There should be a header on top to link to an anchor point of each language.
+* Keep the "TL;DR" section as is.
+* Make sure the link to the online version (on streamlit) is mentioned once at the top (can be in English) and in each language section again.
+* The features should be listed, but kept relatively simple.
+* Do not create a separate "Advanced Features" section.
+* Regroup "installation" and "usage" until one single section (with those two as sub-sections) called "Offline / Local use".
+* Revamp to "Data Storage" section to reflect the current app's state. Make it a point to mention the app is designed not to leak any of your data, but in order to be 100% sure one should deploy and use locally. Using on streamlit depends on a third-party provided that I cannot make guarantees for.
+* Do not have a "Features Breakdown" section.
+
+Return a properly formatted MD file.
+
+## Prompt 28
+Here is the modified README.md file. Can you make sure that an informal tone is used in German, French and Italian ("Sie" = "du", "vous" = "toi"...). Return the whole README file.
