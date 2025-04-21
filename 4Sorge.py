@@ -23,6 +23,39 @@ DEFAULT_PENSION_DATA = {
     "current_salary": 100000,
     "maximum_salary": 130434,
     "years_to_max_salary": 15,
+    "first_pillar_data": {
+        "minimum_contributions": [
+            {"from_year": 1948, "amount": 40},
+            {"from_year": 1969, "amount": 100},
+            {"from_year": 1980, "amount": 200},
+            {"from_year": 1990, "amount": 300},
+            {"from_year": 2000, "amount": 324},
+            {"from_year": 2010, "amount": 460},
+            {"from_year": 2020, "amount": 496},
+            {"from_year": 2024, "amount": 514},
+            {"from_year": 2025, "amount": 530}
+        ],
+        "average_annual_incomes": [
+            {"from_year": 1950, "amount": 5000},
+            {"from_year": 1960, "amount": 8000},
+            {"from_year": 1970, "amount": 15000},
+            {"from_year": 1980, "amount": 30000},
+            {"from_year": 1990, "amount": 45000},
+            {"from_year": 2000, "amount": 60000},
+            {"from_year": 2010, "amount": 75000},
+            {"from_year": 2020, "amount": 85000},
+            {"from_year": 2025, "amount": 88200}
+        ],
+        "monthly_payout_rates": [
+            {"income_from": 0, "income_to": 14100, "monthly_amount": 1260},
+            {"income_from": 14100, "income_to": 35400, "monthly_amount": 1890},
+            {"income_from": 35400, "income_to": 56700, "monthly_amount": 2205},
+            {"income_from": 56700, "income_to": 9999999, "monthly_amount": 2520}
+        ],
+        "yearly_incomes": [],
+        "required_contribution_years": 45,
+        "retirement_offset_years": 0
+    },
     "expected_yield": 1.25,
     "personal_contribution_ranges": [
         {
@@ -78,7 +111,7 @@ TRANSLATIONS = {
         "app_title": "4Sorge - Pension Fund Simulator",
         "app_subtitle": "Simulate and compare your pension scenarios",
         "navigation": "Navigation",
-        "pension_calculator": "Pension Calculator",
+        "pension_calculator": "2nd pillar: pension fund (OP)",
         "plan_management": "Plan Management",
         "comparison": "Comparison",
         "personal_information": "Personal Information",
@@ -95,6 +128,10 @@ TRANSLATIONS = {
         "contribution_options": "Contribution Options",
         "personal_contributions": "Personal Contributions",
         "employer_contributions": "Employer Contributions",
+        "first_pillar": "1st Pillar (AVS/AHV)",
+        "first_pillar_summary": "1st Pillar Summary",
+        "first_pillar_config": "1st Pillar Configuration",
+        "first_pillar_projection": "1st Pillar Projection",
         "simulation_results": "Simulation Results",
         "final_values": "Final Pension Values at Retirement",
         "option": "Option",
@@ -185,13 +222,56 @@ TRANSLATIONS = {
         "download_report": "Download Printable Report",
         "print_instructions_1": "1. Click the link above to download the report",
         "print_instructions_2": "2. Open the HTML file in your browser",
-        "print_instructions_3": "3. Use your browser's print function (Ctrl+P or Cmd+P) to print the document"
+        "print_instructions_3": "3. Use your browser's print function (Ctrl+P or Cmd+P) to print the document",
+        "minimum_annual_contribution": "Minimum Annual Contribution",
+        "average_annual_income": "Average annual income (to obtain 100% of pension)",
+        "monthly_payout_rates": "Monthly Payout Rates",
+        "income_from": "Income From",
+        "income_to": "Income To",
+        "monthly_amount": "Monthly Amount",
+        "yearly_income": "Yearly Income",
+        "add_income_range": "Add Income Range",
+        "income_range": "Income Range",
+        "income_year_from": "From Year",
+        "income_year_to": "To Year",
+        "income_amount": "Income Amount",
+        "required_contribution_years": "Required Contribution Years",
+        "years_contributed": "Years Contributed",
+        "penalty_years": "Penalty Years",
+        "contribution_percentage": "Contribution Percentage",
+        "projected_monthly_pension": "Projected Monthly Pension",
+        "first_pillar_results": "1st Pillar Pension Results",
+        "expected_monthly_pension": "Expected Monthly Pension",
+        "percent_of_maximum": "Percent of Maximum",
+        "first_pillar_timeline": "1st Pillar Contribution Timeline",
+        "early_late_retirement": "Early/Late Retirement",
+        "standard_retirement": "Standard Retirement (65)",
+        "early_retirement": "Early Retirement",
+        "late_retirement": "Late Retirement",
+        "years_offset": "Years Offset",
+        "retirement_offset_info": "Retiring earlier reduces your pension, while delaying retirement increases it.",
+        "early_retirement_factor": "Early Retirement Factor",
+        "late_retirement_factor": "Late Retirement Factor",
+        "early_retirement_penalty": "6.8% reduction per year of early retirement",
+        "late_retirement_bonus": "5.2% increase per year of delayed retirement",
+        "first_pillar_projection_title": "1st Pillar Pension Projection",
+        "minimum_pension": "Minimum Pension",
+        "maximum_pension": "Maximum Pension",
+        "your_average_income": "Your Average Income",
+        "income_gap_to_max_pension": "Income Gap to Max Pension",
+        "pension_range": "Pension Range",
+        "pension_position": "Your position on pension scale",
+        "pension_position_text": "Your estimated monthly pension is **CHF {0:,.0f}**, which is {1:.1f}% of the way between the minimum (CHF {2:,.0f}) and maximum (CHF {3:,.0f}) pension amounts. This is based on your contribution percentage of {4:.1f}% and retirement at age {5}.",
+        "reference_points": "Reference Points",
+        "is": "is",
+        "of": "of",
+        "exceeds": "exceeds"
     },
     "de": {
         "app_title": "4Sorge - Pensionskassen-Simulator",
         "app_subtitle": "Simulieren und vergleichen Sie Ihre Pensionsszenarien",
         "navigation": "Navigation",
-        "pension_calculator": "Pensionsrechner",
+        "pension_calculator": "2. Säule: Pensionskasse (BVG)",
         "plan_management": "Planverwaltung",
         "comparison": "Vergleich",
         "personal_information": "Persönliche Informationen",
@@ -298,13 +378,60 @@ TRANSLATIONS = {
         "download_report": "Druckbaren Bericht herunterladen",
         "print_instructions_1": "1. Klicken Sie auf den obigen Link, um den Bericht herunterzuladen",
         "print_instructions_2": "2. Öffnen Sie die HTML-Datei in Ihrem Browser",
-        "print_instructions_3": "3. Verwenden Sie die Druckfunktion Ihres Browsers (Strg+P oder Cmd+P), um das Dokument zu drucken"
+        "print_instructions_3": "3. Verwenden Sie die Druckfunktion Ihres Browsers (Strg+P oder Cmd+P), um das Dokument zu drucken",
+        "first_pillar": "1. Säule (AHV)",
+        "first_pillar_summary": "1. Säule Zusammenfassung",
+        "first_pillar_config": "1. Säule Konfiguration",
+        "first_pillar_projection": "1. Säule Projektion",
+        "minimum_annual_contribution": "Minimaler Jahresbeitrag",
+        "average_annual_income": "Massgebliches durchschnittliches Jahreseinkommen (um 100% der Rente zu erhalten)",
+        "monthly_payout_rates": "Monatliche Auszahlungsraten",
+        "income_from": "Einkommen von",
+        "income_to": "Einkommen bis",
+        "monthly_amount": "Monatlicher Betrag",
+        "yearly_income": "Jahreseinkommen",
+        "add_income_range": "Einkommensbereich hinzufügen",
+        "income_range": "Einkommensbereich",
+        "income_year_from": "Von Jahr",
+        "income_year_to": "Bis Jahr",
+        "income_amount": "Einkommensbetrag",
+        "required_contribution_years": "Erforderliche Beitragsjahre",
+        "years_contributed": "Beitragsjahre",
+        "penalty_years": "Fehlende Jahre",
+        "contribution_percentage": "Beitragsprozentsatz",
+        "projected_monthly_pension": "Prognostizierte monatliche Rente",
+        "first_pillar_results": "1. Säule Rentenergebnisse",
+        "expected_monthly_pension": "Erwartete monatliche Rente",
+        "percent_of_maximum": "Prozent des Maximums",
+        "first_pillar_timeline": "1. Säule Beitäge Zeitachse",
+        "early_late_retirement": "Früh-/Spätpensionierung",
+        "standard_retirement": "Standardpensionierung (65)",
+        "early_retirement": "Frühpensionierung",
+        "late_retirement": "Spätpensionierung",
+        "years_offset": "Jahre Versatz",
+        "retirement_offset_info": "Eine frühere Pensionierung reduziert Ihre Rente, während eine spätere Pensionierung sie erhöht.",
+        "early_retirement_factor": "Frühpensionierungsfaktor",
+        "late_retirement_factor": "Spätpensionierungsfaktor",
+        "early_retirement_penalty": "6,8% Reduktion pro Jahr der Frühpensionierung",
+        "late_retirement_bonus": "5,2% Erhöhung pro Jahr der verzögerten Pensionierung",
+        "first_pillar_projection_title": "1. Säule Rentenprojektion",
+        "minimum_pension": "Mindestrente",
+        "maximum_pension": "Maximale Rente",
+        "your_average_income": "Ihr durchschnittliches Einkommen",
+        "income_gap_to_max_pension": "Einkommenslücke zur maximalen Rente",
+        "pension_range": "Rentenbereich",
+        "pension_position": "Ihre Position auf der Rentenskala",
+        "pension_position_text": "Ihre geschätzte monatliche Rente beträgt **CHF {0:,.0f}**, was {1:.1f}% des Weges zwischen der Mindestrente (CHF {2:,.0f}) und der maximalen Rente (CHF {3:,.0f}) entspricht. Dies basiert auf Ihrem Beitragsprozentsatz von {4:.1f}% und der Pensionierung im Alter von {5}.",
+        "reference_points": "Referenzpunkte",
+        "is": "ist",
+        "of": "von",
+        "exceeds": "überschreitet"
     },
     "fr": {
         "app_title": "4Sorge - Simulateur de caisse de pension",
         "app_subtitle": "Simulez et comparez vos scénarios de retraite",
         "navigation": "Navigation",
-        "pension_calculator": "Calculateur de pension",
+        "pension_calculator": "2ème pilier: caisse de pension (LPP)",
         "plan_management": "Gestion des plans",
         "comparison": "Comparaison",
         "personal_information": "Informations personnelles",
@@ -411,13 +538,60 @@ TRANSLATIONS = {
         "download_report": "Télécharger le rapport imprimable",
         "print_instructions_1": "1. Cliquez sur le lien ci-dessus pour télécharger le rapport",
         "print_instructions_2": "2. Ouvrez le fichier HTML dans votre navigateur",
-        "print_instructions_3": "3. Utilisez la fonction d'impression de votre navigateur (Ctrl+P ou Cmd+P) pour imprimer le document"
+        "print_instructions_3": "3. Utilisez la fonction d'impression de votre navigateur (Ctrl+P ou Cmd+P) pour imprimer le document",
+        "first_pillar": "1er Pilier (AVS)",
+        "first_pillar_summary": "Résumé du 1er pilier",
+        "first_pillar_config": "Configuration du 1er pilier",
+        "first_pillar_projection": "Projection du 1er pilier",
+        "minimum_annual_contribution": "Cotisation annuelle minimale",
+        "average_annual_income": "Revenu annuel moyen déterminant (pour obtenir le 100% de la rente)",
+        "monthly_payout_rates": "Taux de versement mensuel",
+        "income_from": "Revenu de",
+        "income_to": "Revenu à",
+        "monthly_amount": "Montant mensuel",
+        "yearly_income": "Revenu annuel",
+        "add_income_range": "Ajouter plage de revenus",
+        "income_range": "Plage de revenus",
+        "income_year_from": "De l'année",
+        "income_year_to": "À l'année",
+        "income_amount": "Montant du revenu",
+        "required_contribution_years": "Années de cotisation requises",
+        "years_contributed": "Années de cotisation",
+        "penalty_years": "Années de pénalité",
+        "contribution_percentage": "Pourcentage de cotisation",
+        "projected_monthly_pension": "Rente mensuelle projetée",
+        "first_pillar_results": "Résultats de la rente du 1er pilier",
+        "expected_monthly_pension": "Rente mensuelle prévue",
+        "percent_of_maximum": "Pourcentage du maximum",
+        "first_pillar_timeline": "Chronologie des contributions au 1er pilier",
+        "early_late_retirement": "Retraite anticipée/tardive",
+        "standard_retirement": "Retraite standard (65 ans)",
+        "early_retirement": "Retraite anticipée",
+        "late_retirement": "Retraite tardive",
+        "years_offset": "Années de décalage",
+        "retirement_offset_info": "Une retraite anticipée réduit votre rente, tandis qu'une retraite tardive l'augmente.",
+        "early_retirement_factor": "Facteur de retraite anticipée",
+        "late_retirement_factor": "Facteur de retraite tardive",
+        "early_retirement_penalty": "Réduction de 6,8% par année de retraite anticipée",
+        "late_retirement_bonus": "Augmentation de 5,2% par année de retraite retardée",
+        "first_pillar_projection_title": "Projection de la rente du 1er pilier",
+        "minimum_pension": "Rente minimale",
+        "maximum_pension": "Rente maximale",
+        "your_average_income": "Votre revenu moyen",
+        "income_gap_to_max_pension": "Écart de revenu jusqu'à la rente maximale",
+        "pension_range": "Plage de rente",
+        "pension_position": "Votre position sur l'échelle de rente",
+        "pension_position_text": "Votre rente mensuelle estimée est de **CHF {0:,.0f}**, ce qui représente {1:.1f}% du chemin entre la rente minimale (CHF {2:,.0f}) et la rente maximale (CHF {3:,.0f}). Ceci est basé sur votre pourcentage de cotisation de {4:.1f}% et la retraite à l'âge de {5}.",
+        "reference_points": "Points de référence",
+        "is": "est",
+        "of": "de",
+        "exceeds": "dépasse"
     },
     "it": {
         "app_title": "4Sorge - Simulatore di fondi pensione",
         "app_subtitle": "Simula e confronta i tuoi scenari pensionistici",
         "navigation": "Navigazione",
-        "pension_calculator": "Calcolatore pensione",
+        "pension_calculator": "2° pilastro: cassa pensioni (LPP)",
         "plan_management": "Gestione piani",
         "comparison": "Confronto",
         "personal_information": "Informazioni personali",
@@ -524,7 +698,54 @@ TRANSLATIONS = {
         "download_report": "Scarica rapporto stampabile",
         "print_instructions_1": "1. Clicca sul link sopra per scaricare il rapporto",
         "print_instructions_2": "2. Apri il file HTML nel tuo browser",
-        "print_instructions_3": "3. Utilizza la funzione di stampa del tuo browser (Ctrl+P o Cmd+P) per stampare il documento"
+        "print_instructions_3": "3. Utilizza la funzione di stampa del tuo browser (Ctrl+P o Cmd+P) per stampare il documento",
+        "first_pillar": "1° Pilastro (AVS)",
+        "first_pillar_summary": "Riepilogo 1° Pilastro",
+        "first_pillar_config": "Configurazione 1° Pilastro",
+        "first_pillar_projection": "Proiezione 1° Pilastro",
+        "minimum_annual_contribution": "Contributo annuale minimo",
+        "average_annual_income": "Reddito medio annuo determinante (per ottenere il 100% della pensione)",
+        "monthly_payout_rates": "Tassi di pagamento mensili",
+        "income_from": "Reddito da",
+        "income_to": "Reddito a",
+        "monthly_amount": "Importo mensile",
+        "yearly_income": "Reddito annuo",
+        "add_income_range": "Aggiungi fascia di reddito",
+        "income_range": "Fascia di reddito",
+        "income_year_from": "Dall'anno",
+        "income_year_to": "All'anno",
+        "income_amount": "Importo del reddito",
+        "required_contribution_years": "Anni di contribuzione richiesti",
+        "years_contributed": "Anni di contribuzione",
+        "penalty_years": "Anni di penalità",
+        "contribution_percentage": "Percentuale di contribuzione",
+        "projected_monthly_pension": "Pensione mensile proiettata",
+        "first_pillar_results": "Risultati pensione 1° Pilastro",
+        "expected_monthly_pension": "Pensione mensile prevista",
+        "percent_of_maximum": "Percentuale del massimo",
+        "first_pillar_timeline": "Cronologia dei contributi del 1° Pilastro",
+        "early_late_retirement": "Pensionamento anticipato/posticipato",
+        "standard_retirement": "Pensionamento standard (65)",
+        "early_retirement": "Pensionamento anticipato",
+        "late_retirement": "Pensionamento posticipato",
+        "years_offset": "Anni di offset",
+        "retirement_offset_info": "Il pensionamento anticipato riduce la pensione, mentre ritardare il pensionamento la aumenta.",
+        "early_retirement_factor": "Fattore pensionamento anticipato",
+        "late_retirement_factor": "Fattore pensionamento posticipato",
+        "early_retirement_penalty": "Riduzione del 6,8% per ogni anno di pensionamento anticipato",
+        "late_retirement_bonus": "Aumento del 5,2% per ogni anno di pensionamento posticipato",
+        "first_pillar_projection_title": "Proiezione pensione 1° Pilastro",
+        "minimum_pension": "Pensione minima",
+        "maximum_pension": "Pensione massima",
+        "your_average_income": "Il tuo reddito medio",
+        "income_gap_to_max_pension": "Divario di reddito per la pensione massima",
+        "pension_range": "Intervallo pensione",
+        "pension_position": "La tua posizione sulla scala pensionistica",
+        "pension_position_text": "La tua pensione mensile stimata è di **CHF {0:,.0f}**, che rappresenta il {1:.1f}% del percorso tra la pensione minima (CHF {2:,.0f}) e la pensione massima (CHF {3:,.0f}). Questo è basato sulla tua percentuale di contribuzione del {4:.1f}% e sul pensionamento all'età di {5}.",
+        "reference_points": "Punti di riferimento",
+        "is": "è",
+        "of": "del",
+        "exceeds": "supera"
     }
 }
 
@@ -1243,6 +1464,407 @@ def get_fund_value_at_date(simulation_df, target_date):
     
     return closest_row['Fund Value']
 
+# 1st Pillar calculation functions
+def get_minimum_contribution(year, minimum_contributions):
+    """Get minimum contribution for a specific year."""
+    applicable_contribution = 0
+    for entry in sorted(minimum_contributions, key=lambda x: x["from_year"]):
+        if year >= entry["from_year"]:
+            applicable_contribution = entry["amount"]
+    return applicable_contribution
+
+def get_average_annual_income(year, average_annual_incomes):
+    """Get the average annual income threshold for a specific year."""
+    applicable_income = 0
+    for entry in sorted(average_annual_incomes, key=lambda x: x["from_year"]):
+        if year >= entry["from_year"]:
+            applicable_income = entry["amount"]
+    return applicable_income
+
+def get_monthly_pension_amount(average_income, monthly_payout_rates):
+    """Get the monthly pension amount based on the average income."""
+    applicable_amount = 0
+    for rate in sorted(monthly_payout_rates, key=lambda x: x["income_from"]):
+        if rate["income_from"] <= average_income <= rate["income_to"]:
+            applicable_amount = rate["monthly_amount"]
+            break
+    return applicable_amount
+
+def get_yearly_income(year, yearly_incomes, default_income=0):
+    """Get the yearly income for a specific year based on user-defined ranges."""
+    if not yearly_incomes:
+        return default_income
+        
+    applicable_income = default_income
+    for entry in yearly_incomes:
+        if entry["year_from"] <= year <= entry["year_to"]:
+            applicable_income = entry["amount"]
+    return applicable_income
+
+def calculate_first_pillar_pension(
+    birth_date, retirement_age, retirement_offset_years,
+    yearly_incomes, minimum_contributions, 
+    average_annual_incomes, monthly_payout_rates,
+    required_contribution_years=45):
+    """
+    Calculate the 1st pillar pension based on Swiss AVS/AHV rules.
+    
+    Parameters:
+    - birth_date: Date of birth
+    - retirement_age: Standard retirement age
+    - retirement_offset_years: Offset from standard retirement age (-5 to +5)
+    - yearly_incomes: List of user-defined yearly income ranges
+    - minimum_contributions: List of minimum contribution thresholds by year
+    - average_annual_incomes: List of average annual income thresholds by year
+    - monthly_payout_rates: List of monthly payout rates based on income
+    - required_contribution_years: Years required for full pension (default 45)
+    
+    Returns:
+    - Dictionary with projection results
+    """
+    if isinstance(birth_date, str):
+        birth_date = datetime.strptime(birth_date, "%Y-%m-%d").date()
+    
+    # Adjust retirement age based on offset
+    adjusted_retirement_age = retirement_age + retirement_offset_years
+    
+    # Calculate retirement year
+    retirement_year = birth_date.year + adjusted_retirement_age
+    
+    # Calculate contribution start year (age 21)
+    start_year = birth_date.year + 21
+    
+    # Initialize variables
+    contribution_years = []
+    incomes = []
+    min_contributions = []
+    penalties = []
+    total_income = 0
+    valid_years = 0
+    penalty_years = 0
+    
+    # Calculate for each year from age 21 to retirement
+    for year in range(start_year, retirement_year + 1):
+        # Get yearly income for this year
+        income = get_yearly_income(year, yearly_incomes, 0)
+        # Get minimum contribution for this year
+        min_contribution = get_minimum_contribution(year, minimum_contributions)
+        
+        # Check if income meets minimum contribution
+        is_penalty_year = income < min_contribution
+        
+        contribution_years.append(year)
+        incomes.append(income)
+        min_contributions.append(min_contribution)
+        penalties.append(is_penalty_year)
+        
+        if not is_penalty_year:
+            total_income += income
+            valid_years += 1
+        else:
+            penalty_years += 1
+    
+    # Calculate average income over valid contribution years
+    avg_income = total_income / max(1, valid_years)
+    
+    # Get the maximum reference income for the retirement year
+    max_reference_income = get_average_annual_income(retirement_year, average_annual_incomes)
+    
+    # Cap the average income at the maximum reference income
+    capped_avg_income = min(avg_income, max_reference_income)
+    
+    # Calculate contribution percentage
+    contribution_percentage = min(1.0, valid_years / required_contribution_years)
+    
+    # Get base monthly pension amount based on capped average income
+    base_monthly_pension = get_monthly_pension_amount(capped_avg_income, monthly_payout_rates)
+    
+    # Apply contribution percentage to get actual pension amount
+    monthly_pension = base_monthly_pension * contribution_percentage
+    
+    # Apply early/late retirement factors
+    # Early retirement: -6.8% per year
+    # Late retirement: +5.2% per year
+    if retirement_offset_years < 0:
+        # Early retirement penalty (reduction)
+        monthly_pension *= (1 - 0.068 * abs(retirement_offset_years))
+    elif retirement_offset_years > 0:
+        # Late retirement bonus (increase)
+        monthly_pension *= (1 + 0.052 * retirement_offset_years)
+    
+    # Get maximum possible pension for 100% contribution
+    max_monthly_pension = get_monthly_pension_amount(max_reference_income, monthly_payout_rates)
+    
+    # Calculate minimum pension (typically for the minimum income)
+    min_monthly_pension = get_monthly_pension_amount(0, monthly_payout_rates)
+    
+    # Prepare result dictionary
+    result = {
+        "yearly_data": pd.DataFrame({
+            "Year": contribution_years,
+            "Age": [year - birth_date.year for year in contribution_years],
+            "Income": incomes,
+            "Minimum Contribution": min_contributions,
+            "Is Penalty Year": penalties
+        }),
+        "total_years": len(contribution_years),
+        "valid_years": valid_years,
+        "penalty_years": penalty_years,
+        "avg_income": avg_income,
+        "capped_avg_income": capped_avg_income,
+        "max_reference_income": max_reference_income,
+        "contribution_percentage": contribution_percentage,
+        "base_monthly_pension": base_monthly_pension,
+        "monthly_pension": monthly_pension,
+        "max_monthly_pension": max_monthly_pension,
+        "min_monthly_pension": min_monthly_pension,
+        "percent_of_maximum": (monthly_pension / max_monthly_pension) * 100,
+        "retirement_age": adjusted_retirement_age,
+        "retirement_year": retirement_year,
+        "retirement_offset_years": retirement_offset_years
+    }
+    
+    return result
+
+def generate_first_pillar_html(result):
+    """
+    Generate a standalone HTML document for the 1st pillar report.
+    
+    Parameters:
+    - result: Dictionary with 1st pillar projection results
+    
+    Returns:
+    - HTML string of the printable document
+    """
+    if not result:
+        return None
+    
+    # Prepare yearly data table
+    yearly_df = result["yearly_data"].copy()
+    yearly_df["Income"] = yearly_df["Income"].apply(lambda x: f"CHF {x:,.0f}")
+    yearly_df["Minimum Contribution"] = yearly_df["Minimum Contribution"].apply(lambda x: f"CHF {x:,.0f}")
+    yearly_df["Is Penalty Year"] = yearly_df["Is Penalty Year"].apply(lambda x: "Yes" if x else "No")
+    
+    # Format yearly data table
+    yearly_html = yearly_df.to_html(index=False, classes="data-table")
+    
+    # Create summary table
+    summary_data = {
+        "Metric": [
+            "Years Contributed", 
+            "Penalty Years", 
+            "Average Income", 
+            "Maximum Reference Income", 
+            "Contribution Percentage", 
+            "Monthly Pension", 
+            "Maximum Possible Pension", 
+            "Percent of Maximum", 
+            "Retirement Age", 
+            "Retirement Year"
+        ],
+        "Value": [
+            f"{result['valid_years']} / {result['total_years']}",
+            str(result["penalty_years"]),
+            f"CHF {result['avg_income']:,.0f}",
+            f"CHF {result['max_reference_income']:,.0f}",
+            f"{result['contribution_percentage'] * 100:.1f}%",
+            f"CHF {result['monthly_pension']:,.0f}",
+            f"CHF {result['max_monthly_pension']:,.0f}",
+            f"{result['percent_of_maximum']:.1f}%",
+            str(result["retirement_age"]),
+            str(result["retirement_year"])
+        ]
+    }
+    
+    summary_df = pd.DataFrame(summary_data)
+    summary_html = summary_df.to_html(index=False, classes="summary-table")
+    
+    # Generate chart as base64 image
+    import io
+    import base64
+    import plotly.io as pio
+    import plotly.graph_objects as go
+    
+    # Create timeline chart
+    fig = go.Figure()
+    
+    # Add Income line
+    fig.add_trace(go.Scatter(
+        x=result["yearly_data"]["Year"],
+        y=result["yearly_data"]["Income"],
+        name="Annual Income",
+        line=dict(color="#1f77b4", width=2)
+    ))
+    
+    # Add Minimum Contribution line
+    fig.add_trace(go.Scatter(
+        x=result["yearly_data"]["Year"],
+        y=result["yearly_data"]["Minimum Contribution"],
+        name="Minimum Contribution",
+        line=dict(color="#d62728", width=2, dash="dash")
+    ))
+    
+    # Mark penalty years with red points
+    penalty_years = result["yearly_data"][result["yearly_data"]["Is Penalty Year"] == True]
+    if not penalty_years.empty:
+        fig.add_trace(go.Scatter(
+            x=penalty_years["Year"],
+            y=penalty_years["Income"],
+            mode="markers",
+            name="Penalty Years",
+            marker=dict(color="red", size=10, symbol="x")
+        ))
+    
+    fig.update_layout(
+        title="1st Pillar Income Timeline",
+        xaxis_title="Year",
+        yaxis_title="CHF",
+        height=500,
+        margin=dict(l=50, r=50, t=80, b=50),
+        paper_bgcolor='white',
+        plot_bgcolor='white'
+    )
+    
+    # Convert to base64 image
+    chart_img = pio.to_image(fig, format="png", width=800, height=400)
+    chart_base64 = base64.b64encode(chart_img).decode('utf-8')
+    
+    # Create pension projection chart
+    fig2 = go.Figure()
+    
+    # Add min, actual, and max pension bars
+    fig2.add_trace(go.Bar(
+        x=["Minimum", "Your Pension", "Maximum"],
+        y=[result["min_monthly_pension"], result["monthly_pension"], result["max_monthly_pension"]],
+        marker_color=["#d62728", "#1f77b4", "#2ca02c"]
+    ))
+    
+    fig2.update_layout(
+        title="Monthly Pension Comparison",
+        yaxis_title="Monthly Pension (CHF)",
+        height=400,
+        margin=dict(l=50, r=50, t=80, b=50),
+        paper_bgcolor='white',
+        plot_bgcolor='white'
+    )
+    
+    # Add value labels on bars
+    fig2.update_traces(
+        text=[f"CHF {result['min_monthly_pension']:,.0f}", 
+              f"CHF {result['monthly_pension']:,.0f}", 
+              f"CHF {result['max_monthly_pension']:,.0f}"],
+        textposition='outside'
+    )
+    
+    # Convert to base64 image
+    chart2_img = pio.to_image(fig2, format="png", width=800, height=400)
+    chart2_base64 = base64.b64encode(chart2_img).decode('utf-8')
+  
+    # Build the complete HTML document
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>1st Pillar Pension Report</title>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+            }}
+            .page {{
+                page-break-after: always;
+                padding: 20px 30px;
+            }}
+            .last-page {{
+                padding: 20px 30px;
+            }}
+            h1 {{
+                font-size: 24px;
+                margin-top: 20px;
+                margin-bottom: 10px;
+                color: #2c3e50;
+            }}
+            h2 {{
+                font-size: 20px;
+                margin-top: 20px;
+                margin-bottom: 10px;
+                color: #34495e;
+            }}
+            .summary-table {{
+                width: calc(100% - 40px);
+                margin: 20px auto;
+                border-collapse: collapse;
+            }}
+            .data-table {{
+                width: calc(100% - 40px);
+                margin: 20px auto;
+                border-collapse: collapse;
+                font-size: 12px;
+            }}
+            th, td {{
+                padding: 8px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }}
+            th {{
+                background-color: #f2f2f2;
+            }}
+            img {{
+                max-width: calc(100% - 40px);
+                height: auto;
+                margin: 20px auto;
+                display: block;
+            }}
+            .highlight {{
+                background-color: #e8f4f8;
+                padding: 15px;
+                border-radius: 5px;
+                margin: 20px 0;
+            }}
+            @media print {{
+                table thead {{
+                    display: table-header-group;
+                }}
+                table tfoot {{
+                    display: table-footer-group;
+                }}
+            }}
+        </style>
+    </head>
+    <body>
+        <!-- Page 1: Summary and Charts -->
+        <div class="page">
+            <h1>1st Pillar Pension Projection</h1>
+            
+            <div class="highlight">
+                <h2>Summary</h2>
+                {summary_html}
+            </div>
+            
+            <h2>Monthly Pension Comparison</h2>
+            <img src="data:image/png;base64,{chart2_base64}" alt="Pension Comparison Chart">
+            
+            <h2>Income Timeline</h2>
+            <img src="data:image/png;base64,{chart_base64}" alt="Income Timeline Chart">
+        </div>
+        
+        <!-- Page 2: Detailed yearly data -->
+        <div class="last-page">
+            <h1>Yearly Income and Contribution Data</h1>
+            {yearly_html}
+            
+            <div class="highlight">
+                <p><strong>Note:</strong> Penalty years are years where your income was below the minimum contribution threshold.
+                These years do not count toward your contribution percentage for the final pension calculation.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    return html
+
 # Streamlit app
 def main():
     st.set_page_config(
@@ -1278,7 +1900,7 @@ def main():
         st.rerun()
 
     # Sidebar for navigation
-    menu_options = [t("pension_calculator"), t("plan_management"), t("comparison")]
+    menu_options = [t("first_pillar"), t("pension_calculator"), t("plan_management"), t("comparison")]
     
     selected_menu = st.sidebar.selectbox(
         t("navigation"), 
@@ -1288,6 +1910,9 @@ def main():
     # Render the appropriate page to get simulations
     if selected_menu == t("pension_calculator"):
         simulations = pension_calculator_page()
+    elif selected_menu == t("first_pillar"):
+        simulations = []  # No regular pension simulations on this page
+        first_pillar_page()
     elif selected_menu == t("plan_management"):
         simulations = []  # No simulations on this page
         plan_management_page()
@@ -1329,7 +1954,9 @@ def main():
     if uploaded_file is not None and not st.session_state.file_processed:
         # Process the file
         if import_data(uploaded_file):
+            st.session_state.file_processed = True
             st.sidebar.success(t("data_uploaded"))
+            st.rerun()  # Rerun the app to show updated data
         else:
             st.sidebar.error(t("invalid_data"))
             # Reset the flag so user can try again
@@ -1363,7 +1990,7 @@ def pension_calculator_page():
             value=data["retirement_age"]
         )
         data["retirement_age"] = retirement_age
-        
+    
         # Salary information section
         st.subheader(t("salary_information"))
         current_salary = st.number_input(
@@ -1448,18 +2075,6 @@ def pension_calculator_page():
             data["bonus_type"] = "no_bonus"
             data["bonus_percentage"] = 0.0
             data["bonus_fixed"] = 0.0
-            
-        # Toggle for yearly/monthly view
-        st.subheader(t("toggle_view"))
-        view_toggle = st.radio(
-            "View Type",  # A simple label that will be hidden
-            [t("yearly"), t("monthly")],
-            horizontal=True,
-            label_visibility="collapsed"  # Hide the label since we have the subheader
-        )
-        is_monthly = view_toggle == t("monthly")
-        # Store is_monthly in session state for use in the sidebar
-        st.session_state.is_monthly = is_monthly
     
     with col2:
         # Pension fund info section
@@ -1726,6 +2341,18 @@ def pension_calculator_page():
     
     # Simulate and display results
     st.header(t("simulation_results"))
+
+    # Toggle for yearly/monthly view
+    st.subheader(t("toggle_view"))
+    view_toggle = st.radio(
+        "View Type",  # A simple label that will be hidden
+        [t("yearly"), t("monthly")],
+        horizontal=True,
+        label_visibility="collapsed"  # Hide the label since we have the subheader
+    )
+    is_monthly = view_toggle == t("monthly")
+    # Store is_monthly in session state for use in the sidebar
+    st.session_state.is_monthly = is_monthly
     
     # Simulate for each personal contribution option
     simulations = []
@@ -1753,7 +2380,7 @@ def pension_calculator_page():
         if not sim.empty:
             sim["Option"] = f"{t('option')} {i+1}"
             simulations.append(sim)
-    
+
     # Check Fund Value at Specific Date
     st.subheader(t("check_fund_value"))
     check_date = st.date_input(t("select_month_year"), value=date.today())
@@ -1969,7 +2596,6 @@ def plan_management_page():
         else:
             st.error(t("plan_exists"))
 
-
 def comparison_page():
     # Access data from session state
     data = st.session_state.pension_data
@@ -2119,6 +2745,615 @@ def comparison_page():
         })
     )
 
+def first_pillar_page():
+    """
+    1st Pillar calculator page
+    """
+    # Access data from session state
+    data = st.session_state.pension_data
+    
+    # Ensure first_pillar_data exists in data
+    if "first_pillar_data" not in data:
+        data["first_pillar_data"] = DEFAULT_PENSION_DATA["first_pillar_data"].copy()
+    
+    first_pillar_data = data["first_pillar_data"]
+    
+    # Create tabs for Summary, Configuration, and Projection
+    fpillar_tabs = st.tabs([
+        t("first_pillar_summary"), 
+        t("first_pillar_config"),
+        t("first_pillar_projection")
+    ])
+    
+    with fpillar_tabs[0]:
+        # Summary tab - shows calculation results
+        st.subheader(t("first_pillar_results"))
+        
+        # Define a function to update results when slider changes
+        def update_retirement_offset():
+            # Update first_pillar_data with the new value from session state
+            first_pillar_data["retirement_offset_years"] = st.session_state.retirement_offset_slider
+            data["first_pillar_data"] = first_pillar_data
+            st.session_state.pension_data = data
+        
+        # Early/Late retirement settings first (before calculating results)
+        st.subheader(t("early_late_retirement"))
+        
+        # Create the slider with on_change callback
+        retirement_offset = st.slider(
+            t("years_offset"),
+            min_value=-5,
+            max_value=5,
+            value=first_pillar_data.get("retirement_offset_years", 0),
+            help=t("retirement_offset_info"),
+            key="retirement_offset_slider",
+            on_change=update_retirement_offset
+        )
+        
+        # Display early/late retirement factors
+        if retirement_offset < 0:
+            st.info(f"{t('early_retirement_factor')}: {t('early_retirement_penalty')}")
+        elif retirement_offset > 0:
+            st.info(f"{t('late_retirement_factor')}: {t('late_retirement_bonus')}")
+        else:
+            st.info(t('standard_retirement'))
+        
+        # Calculate 1st pillar pension based on current data (including slider value)
+        result = calculate_first_pillar_pension(
+            data["birth_date"],
+            data["retirement_age"],
+            first_pillar_data.get("retirement_offset_years", 0),
+            first_pillar_data.get("yearly_incomes", []),
+            first_pillar_data.get("minimum_contributions", []),
+            first_pillar_data.get("average_annual_incomes", []),
+            first_pillar_data.get("monthly_payout_rates", []),
+            first_pillar_data.get("required_contribution_years", 45)
+        )
+        
+        if result:
+            # Display summary results
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.metric(t("expected_monthly_pension"), f"CHF {result['monthly_pension']:,.0f}")
+                st.metric(t("contribution_percentage"), f"{result['contribution_percentage'] * 100:.1f}%")
+                st.metric(t("years_contributed"), f"{result['valid_years']} / {result['total_years']}")
+            
+            with col2:
+                st.metric(t("percent_of_maximum"), f"{result['percent_of_maximum']:.1f}%")
+                st.metric(t("maximum_pension"), f"CHF {result['max_monthly_pension']:,.0f}")
+                st.metric(t("retirement_age"), result["retirement_age"])
+
+            st.subheader(t("first_pillar_projection_title"))
+
+            # Pension comparison chart - improved visualization with linear scale
+            fig = go.Figure()
+
+            # Add a horizontal bar for the full range
+            fig.add_trace(go.Bar(
+                x=[result["max_monthly_pension"] - result["min_monthly_pension"]],
+                y=[t("pension_range")],
+                orientation='h',
+                marker=dict(
+                    color='lightgrey',
+                    line=dict(color='grey', width=1)
+                ),
+                showlegend=False,
+                hoverinfo='none',
+                base=result["min_monthly_pension"]
+            ))
+
+            # Add user's position marker
+            fig.add_trace(go.Scatter(
+                x=[result["monthly_pension"]],
+                y=[t("pension_range")],
+                mode='markers',
+                marker=dict(
+                    symbol='line-ns',
+                    color='blue',
+                    size=20,
+                    line=dict(width=4)
+                ),
+                name=t("expected_monthly_pension"),
+                hovertemplate=f"{t('expected_monthly_pension')}: CHF %{{x:,.0f}}<extra></extra>"
+            ))
+
+            # Add minimum and maximum points
+            fig.add_trace(go.Scatter(
+                x=[result["min_monthly_pension"], result["max_monthly_pension"]],
+                y=[t("pension_range"), t("pension_range")],
+                mode='markers+text',
+                marker=dict(color=['#d62728', '#2ca02c'], size=10),
+                text=[t("minimum_pension"), t("maximum_pension")],
+                textposition=["bottom center", "bottom center"],
+                name=t("reference_points"),
+                hovertemplate="CHF %{x:,.0f}<extra></extra>"
+            ))
+
+            # Add labeled points at 25%, 50%, and 75% of the range
+            range_size = result["max_monthly_pension"] - result["min_monthly_pension"]
+            markers_x = [
+                result["min_monthly_pension"] + range_size * 0.25,
+                result["min_monthly_pension"] + range_size * 0.5,
+                result["min_monthly_pension"] + range_size * 0.75
+            ]
+
+            fig.add_trace(go.Scatter(
+                x=markers_x,
+                y=[t("pension_range"), t("pension_range"), t("pension_range")],
+                mode='markers',
+                marker=dict(color='grey', size=8, symbol='line-ns'),
+                showlegend=False,
+                hoverinfo='none'
+            ))
+
+            # Calculate percentage of the way from min to max
+            if (result["max_monthly_pension"] - result["min_monthly_pension"]) > 0:
+                percentage = (result["monthly_pension"] - result["min_monthly_pension"]) / (result["max_monthly_pension"] - result["min_monthly_pension"]) * 100
+            else:
+                percentage = 0
+
+            # Customize layout
+            fig.update_layout(
+                title=f"{t('expected_monthly_pension')}: CHF {result['monthly_pension']:,.0f} ({percentage:.1f}%)",
+                xaxis=dict(
+                    title=t("monthly_amount"),
+                    tickformat=",",
+                    showgrid=True,
+                    gridcolor='lightgrey'
+                ),
+                yaxis=dict(
+                    showticklabels=False,
+                    showgrid=False,
+                    zeroline=False
+                ),
+                height=250,
+                margin=dict(l=20, r=20, t=50, b=50),
+                hovermode="x"
+            )
+
+            # Add vertical line at user's pension value
+            fig.add_vline(
+                x=result["monthly_pension"],
+                line_color="blue",
+                line_dash="dash",
+                opacity=0.7
+            )
+
+            # Add labeled annotations for min, max and your pension
+            fig.add_annotation(
+                x=result["min_monthly_pension"],
+                y=t("pension_range"),
+                text=f"{t('minimum_pension')}: CHF {result['min_monthly_pension']:,.0f}",
+                showarrow=False,
+                yshift=-30,
+                font=dict(size=10, color="#d62728")
+            )
+
+            fig.add_annotation(
+                x=result["max_monthly_pension"],
+                y=t("pension_range"),
+                text=f"{t('maximum_pension')}: CHF {result['max_monthly_pension']:,.0f}",
+                showarrow=False,
+                yshift=-30,
+                font=dict(size=10, color="#2ca02c")
+            )
+
+            fig.add_annotation(
+                x=result["monthly_pension"],
+                y=t("pension_range"),
+                text=f"{t('expected_monthly_pension')}: CHF {result['monthly_pension']:,.0f}",
+                showarrow=True,
+                arrowhead=2,
+                yshift=30,
+                font=dict(size=12, color="blue")
+            )
+
+            st.plotly_chart(fig, use_container_width=True)
+
+            # Add explanatory text for context with translation support
+            st.info(
+                t("pension_position_text").format(
+                    result['monthly_pension'],
+                    percentage,
+                    result['min_monthly_pension'],
+                    result['max_monthly_pension'],
+                    result['contribution_percentage'] * 100,
+                    result['retirement_age']
+                )
+            )
+
+            # Income timeline with delta visualization
+            st.subheader(t("first_pillar_timeline"))
+
+            fig2 = go.Figure()
+
+            # Add Income line
+            fig2.add_trace(go.Scatter(
+                x=result["yearly_data"]["Year"],
+                y=result["yearly_data"]["Income"],
+                name=t("yearly_income"),
+                line=dict(color="#1f77b4", width=2)
+            ))
+
+            # Add Minimum Contribution line
+            fig2.add_trace(go.Scatter(
+                x=result["yearly_data"]["Year"],
+                y=result["yearly_data"]["Minimum Contribution"],
+                name=t("minimum_annual_contribution"),
+                line=dict(color="#d62728", width=2, dash="dash")
+            ))
+
+            # Add Average Annual Income line (reference)
+            fig2.add_trace(go.Scatter(
+                x=result["yearly_data"]["Year"],
+                y=[result["max_reference_income"]] * len(result["yearly_data"]["Year"]),
+                name=t("average_annual_income"),
+                line=dict(color="#2ca02c", width=2, dash="dot")
+            ))
+
+            # Add User's Average Income line
+            fig2.add_trace(go.Scatter(
+                x=result["yearly_data"]["Year"],
+                y=[result["avg_income"]] * len(result["yearly_data"]["Year"]),
+                name=t("your_average_income"),
+                line=dict(color="#9467bd", width=2, dash="dashdot")
+            ))
+
+            # Add the delta area between user's average and max reference
+            years = result["yearly_data"]["Year"].tolist()
+            if result["avg_income"] < result["max_reference_income"]:
+                # Delta area showing gap to 100% pension
+                fig2.add_trace(go.Scatter(
+                    x=years + years[::-1],
+                    y=[result["avg_income"]] * len(years) + [result["max_reference_income"]] * len(years),
+                    fill='toself',
+                    fillcolor='rgba(255, 165, 0, 0.2)',
+                    line=dict(color='rgba(255, 165, 0, 0)'),
+                    name=t("income_gap_to_max_pension"),
+                    showlegend=True
+                ))
+
+            # Mark penalty years with red points
+            penalty_years = result["yearly_data"][result["yearly_data"]["Is Penalty Year"] == True]
+            if not penalty_years.empty:
+                fig2.add_trace(go.Scatter(
+                    x=penalty_years["Year"],
+                    y=penalty_years["Income"],
+                    mode="markers",
+                    name=t("penalty_years"),
+                    marker=dict(color="red", size=10, symbol="x")
+                ))
+
+            fig2.update_layout(
+                title=t("first_pillar_timeline"),
+                xaxis_title=t("year"),
+                yaxis_title="CHF",
+                height=500,
+                legend=dict(orientation="h", y=-0.2)
+            )
+
+            # Add annotations to explain the gap
+            if result["avg_income"] < result["max_reference_income"]:
+                delta = result["max_reference_income"] - result["avg_income"]
+                percent_to_max = (result["avg_income"] / result["max_reference_income"]) * 100
+                
+                # Add annotation for the gap
+                mid_year = (years[0] + years[-1]) / 2
+                mid_y = (result["avg_income"] + result["max_reference_income"]) / 2
+                
+                fig2.add_annotation(
+                    x=mid_year,
+                    y=mid_y,
+                    text=f"CHF {delta:,.0f}<br>({percent_to_max:.1f}%)",
+                    showarrow=True,
+                    arrowhead=2,
+                    arrowsize=1,
+                    arrowwidth=2,
+                    arrowcolor="orange",
+                    font=dict(color="black", size=12),
+                    bgcolor="rgba(255, 255, 255, 0.8)",
+                    bordercolor="orange",
+                    borderwidth=2,
+                    borderpad=4,
+                    align="center"
+                )
+
+            st.plotly_chart(fig2, use_container_width=True)
+
+            # Add explanatory text below the chart
+            if result["avg_income"] < result["max_reference_income"]:
+                st.info(f"{t('your_average_income')} (CHF {result['avg_income']:,.0f}) {t('is')} {(result['avg_income'] / result['max_reference_income']) * 100:.1f}% {t('of')} {t('average_annual_income')} (CHF {result['max_reference_income']:,.0f}).")
+            elif result["avg_income"] > result["max_reference_income"]:
+                st.success(f"{t('your_average_income')} (CHF {result['avg_income']:,.0f}) {t('exceeds')} {t('average_annual_income')} (CHF {result['max_reference_income']:,.0f}).")
+            
+            # Generate printable report button
+            if st.button(t("print_report")):
+                printable_html = generate_first_pillar_html(result)
+                download_link = create_download_link(printable_html, "first_pillar_report.html")
+                st.markdown(download_link, unsafe_allow_html=True)
+                st.info(t("print_instructions_1"))
+                st.info(t("print_instructions_2"))
+                st.info(t("print_instructions_3"))
+        else:
+            st.warning(t("no_data_available"))
+    
+    with fpillar_tabs[1]:
+        # Configuration tab - allows setting up all parameters for 1st pillar
+        st.subheader(t("first_pillar_config"))
+        
+        # Minimum annual contributions
+        st.write(t("minimum_annual_contribution"))
+        
+        num_min_contributions = st.number_input(
+            t("number_of_entries"),
+            min_value=1,
+            max_value=20,
+            value=len(first_pillar_data.get("minimum_contributions", [])),
+            key="num_min_contributions"
+        )
+        
+        min_contributions = []
+        for i in range(num_min_contributions):
+            cols = st.columns(2)
+            
+            default_entry = {"from_year": 2000, "amount": 500}
+            if "minimum_contributions" in first_pillar_data and i < len(first_pillar_data["minimum_contributions"]):
+                default_entry = first_pillar_data["minimum_contributions"][i]
+            
+            with cols[0]:
+                from_year = st.number_input(
+                    t("from_year"),
+                    min_value=1900,
+                    max_value=2100,
+                    value=default_entry["from_year"],
+                    key=f"min_contrib_year_{i}"
+                )
+            
+            with cols[1]:
+                amount = st.number_input(
+                    t("amount"),
+                    min_value=0,
+                    max_value=10000,
+                    value=default_entry["amount"],
+                    key=f"min_contrib_amount_{i}"
+                )
+            
+            min_contributions.append({"from_year": from_year, "amount": amount})
+        
+        first_pillar_data["minimum_contributions"] = min_contributions
+        
+        # Average annual incomes
+        st.write(t("average_annual_income"))
+        
+        num_avg_incomes = st.number_input(
+            t("number_of_entries"),
+            min_value=1,
+            max_value=20,
+            value=len(first_pillar_data.get("average_annual_incomes", [])),
+            key="num_avg_incomes"
+        )
+        
+        avg_incomes = []
+        for i in range(num_avg_incomes):
+            cols = st.columns(2)
+            
+            default_entry = {"from_year": 2000, "amount": 85000}
+            if "average_annual_incomes" in first_pillar_data and i < len(first_pillar_data["average_annual_incomes"]):
+                default_entry = first_pillar_data["average_annual_incomes"][i]
+            
+            with cols[0]:
+                from_year = st.number_input(
+                    t("from_year"),
+                    min_value=1900,
+                    max_value=2100,
+                    value=default_entry["from_year"],
+                    key=f"avg_income_year_{i}"
+                )
+            
+            with cols[1]:
+                amount = st.number_input(
+                    t("amount"),
+                    min_value=0,
+                    max_value=500000,
+                    value=default_entry["amount"],
+                    key=f"avg_income_amount_{i}"
+                )
+            
+            avg_incomes.append({"from_year": from_year, "amount": amount})
+        
+        first_pillar_data["average_annual_incomes"] = avg_incomes
+        
+        # Monthly payout rates
+        st.write(t("monthly_payout_rates"))
+        
+        num_payout_rates = st.number_input(
+            t("number_of_entries"),
+            min_value=1,
+            max_value=10,
+            value=len(first_pillar_data.get("monthly_payout_rates", [])),
+            key="num_payout_rates"
+        )
+        
+        payout_rates = []
+        for i in range(num_payout_rates):
+            cols = st.columns(3)
+            
+            default_entry = {"income_from": 0, "income_to": 85000, "monthly_amount": 2000}
+            if "monthly_payout_rates" in first_pillar_data and i < len(first_pillar_data["monthly_payout_rates"]):
+                default_entry = first_pillar_data["monthly_payout_rates"][i]
+            
+            with cols[0]:
+                income_from = st.number_input(
+                    t("income_from"),
+                    min_value=0,
+                    max_value=1000000,
+                    value=default_entry["income_from"],
+                    key=f"payout_from_{i}"
+                )
+            
+            with cols[1]:
+                income_to = st.number_input(
+                    t("income_to"),
+                    min_value=income_from,
+                    max_value=10000000,
+                    value=default_entry["income_to"],
+                    key=f"payout_to_{i}"
+                )
+            
+            with cols[2]:
+                monthly_amount = st.number_input(
+                    t("monthly_amount"),
+                    min_value=0,
+                    max_value=10000,
+                    value=default_entry["monthly_amount"],
+                    key=f"payout_amount_{i}"
+                )
+            
+            payout_rates.append({
+                "income_from": income_from,
+                "income_to": income_to,
+                "monthly_amount": monthly_amount
+            })
+        
+        first_pillar_data["monthly_payout_rates"] = payout_rates
+        
+        # Required contribution years
+        required_years = st.number_input(
+            t("required_contribution_years"),
+            min_value=1,
+            max_value=50,
+            value=first_pillar_data.get("required_contribution_years", 45)
+        )
+        first_pillar_data["required_contribution_years"] = required_years
+    
+    with fpillar_tabs[2]:
+        # Projection tab - allows entering income history
+        st.subheader(t("yearly_income"))
+        st.write(t("add_income_range"))
+        
+        # Table of yearly incomes
+        num_income_entries = st.number_input(
+            t("number_of_entries"),
+            min_value=0,
+            max_value=50,
+            value=len(first_pillar_data.get("yearly_incomes", [])),
+            key="num_income_entries"
+        )
+        
+        # Calculate retirement year for the last entry
+        if isinstance(data["birth_date"], str):
+            birth_date = datetime.strptime(data["birth_date"], "%Y-%m-%d").date()
+        else:
+            birth_date = data["birth_date"]
+        retirement_age = data["retirement_age"] + first_pillar_data.get("retirement_offset_years", 0)
+        retirement_year = birth_date.year + retirement_age
+        
+        yearly_incomes = []
+        for i in range(num_income_entries):
+            cols = st.columns(3)
+            
+            default_entry = {"year_from": 2000, "year_to": 2010, "amount": 80000}
+            
+            # Set default from_year based on previous entry's to_year + 1
+            if i > 0 and "yearly_incomes" in first_pillar_data and i-1 < len(first_pillar_data["yearly_incomes"]):
+                prev_to_year = first_pillar_data["yearly_incomes"][i-1]["year_to"]
+                default_from_year = prev_to_year + 1
+            else:
+                default_from_year = 2000
+            
+            # Use existing entry if available
+            if "yearly_incomes" in first_pillar_data and i < len(first_pillar_data["yearly_incomes"]):
+                default_entry = first_pillar_data["yearly_incomes"][i]
+            else:
+                default_entry["year_from"] = default_from_year
+                
+            # For the last entry, set the year_to to retirement year
+            if i == num_income_entries - 1:
+                default_to_year = retirement_year
+            else:
+                default_to_year = default_entry["year_to"]
+                
+            with cols[0]:
+                year_from = st.number_input(
+                    t("income_year_from"),
+                    min_value=1900,
+                    max_value=2100,
+                    value=default_entry["year_from"],
+                    key=f"income_year_from_{i}"
+                )
+            
+            with cols[1]:
+                # If this is the last entry, set to_year to retirement year
+                if i == num_income_entries - 1:
+                    year_to = st.number_input(
+                        t("income_year_to"),
+                        min_value=year_from,
+                        max_value=2100,
+                        value=default_to_year,
+                        key=f"income_year_to_{i}"
+                    )
+                else:
+                    year_to = st.number_input(
+                        t("income_year_to"),
+                        min_value=year_from,
+                        max_value=2100,
+                        value=default_entry["year_to"],
+                        key=f"income_year_to_{i}"
+                    )
+            
+            with cols[2]:
+                amount = st.number_input(
+                    t("income_amount"),
+                    min_value=0,
+                    max_value=1000000,
+                    value=default_entry["amount"],
+                    key=f"income_amount_{i}"
+                )
+            
+            yearly_incomes.append({
+                "year_from": year_from,
+                "year_to": year_to,
+                "amount": amount
+            })
+        
+        first_pillar_data["yearly_incomes"] = yearly_incomes
+        
+        # Show preview of income data
+        if yearly_incomes:
+            st.subheader(t("income_range"))
+            
+            # Create data for visualization
+            preview_years = list(range(
+                min(entry["year_from"] for entry in yearly_incomes),
+                max(entry["year_to"] for entry in yearly_incomes) + 1
+            ))
+            
+            preview_incomes = [get_yearly_income(year, yearly_incomes, 0) for year in preview_years]
+            
+            # Create DataFrame
+            preview_df = pd.DataFrame({
+                "Year": preview_years,
+                "Income": preview_incomes
+            })
+            
+            # Display as table
+            st.dataframe(preview_df.style.format({"Income": "CHF {:,.0f}"}))
+            
+            # Display as line chart
+            fig = px.line(
+                preview_df,
+                x="Year",
+                y="Income",
+                title=t("yearly_income"),
+                labels={"Income": "CHF"}
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+    
+    # Save 1st pillar data back to session state
+    data["first_pillar_data"] = first_pillar_data
+    st.session_state.pension_data = data
 
 if __name__ == "__main__":
     main()

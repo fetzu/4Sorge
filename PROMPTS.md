@@ -212,3 +212,127 @@ I need you to do the following:
 * Make sure the texts for "Print Report" are translated and available in German, French and Italian as well.
 
 Return only changed functions. You can return just the new translation keys to add to "TRANSLATIONS".
+
+## Prompt 22 (new chat for "1Pillar" function)
+I have provided you with the source code of a Python app. I need you to expand the app by adding a new feature called "1Pillar".
+ Using the already provided data (from the "Pension Calculator" page) it should allow to generate both a tabular and graphic projection of the expected monthly annuity for the Swiss 1st Pillar. The Swiss 1st pillar is an obligatory insurance that starts being page at the age of retirement (65 years old), with an option to take it up to 5 years earlier or later. The amount of the monthly payments is based on how much was paid into the insurance, there is a minimum sum and an upper limit. In the end, the amount of the monthly allowance is determined according to the "revenu annuel moyen" (average yearly income) of the employee over their lifetime. The value of the "revenu annuel moyen" changes overtime, historical data will be provided bellow.
+   * The 1st pillar information should be configurable with the following:
+      * The user should be able to set their yearly income on a per-year granularity. You can work with ranges, and always assume the latest value in the range will be the yearly income until retirement. The user should also be able to input "projections" of expected revenue for future years.
+      * There should be a way to set the "revenu annuel moyen" needed to reach 100% allowance (as well as the "minimum sum", which not reaching causes a "penalty year"). You shall pre-fill it with historical data, but the user should be able to make more entries. The employee should pay for 45 years to receive a full pension. The reduced pension is calculated as follows: "Reduced pension = Full pension × (Years contributed / Required contribution years".
+      * There should be a way to set the current monthly payouts according to the "revenu annuel moyen". The data should be pre-filled and is provided below. The data should be modifiable by the user, who shall also be able to create new entries/ranges.
+   * The software should recognize years where the revenue has been zero or less than the "minimum", and count these years as "penalty years". The number of penalty years shall be displayed clearly on the page.
+   * The goal of the app is to provide the user with a way to
+      1. Project that their monthly allowance will be at the age or retirement, in percent of the maximum allowance.
+     2. Print the results in a nice format (you can do this using the same HTML download method as for the other page)
+     3. Have a graphic representation of the minimum and maximum payout conditions compared to the user's (red being minimum, and green being the maximum). This should be a chart using amount over time.
+
+Évolution du revenu annuel moyen déterminant (indicatif):
+PériodeRevenu annuel moyen déterminant (CHF)
+1950~5'000
+1960~8'000
+1970~15'000
+1980~30'000
+1990~45'000
+2000~60'000
+2010~75'000
+2020~85'000
+2025~88'200
+
+Cotisation minimale annuelle (non-actifs)
+AnnéeMontant minimal annuel (CHF)
+1948 40
+1969 100
+1980 200
+1990 300
+2000 324
+2010 460
+2020 496
+2024 514
+2025 530
+
+Revenu annuel moyen déterminant (CHF)
+Rente mensuelle AVS (CHF)
+14 100 1 260
+35 400 1 890
+56 700 2 205
+88 200 et plus 2 520
+
+Modify the code accordingly and return the complete modified source code.
+
+## Prompt 22 (alt)
+I have provided you with the source code of a Python app. I need you to expand the app by adding a new feature called "1Pillar".
+ Using the already provided data (from the "Pension Calculator" page) it should allow to generate both a tabular and graphic projection of the expected monthly annuity for the Swiss 1st Pillar. The Swiss 1st pillar is an obligatory insurance that starts being page at the age of retirement (65 years old), with an option to take it up to 5 years earlier or later. The amount of the monthly payments is based on how much was paid into the insurance, there is a minimum sum and an upper limit. In the end, the amount of the monthly allowance is determined according to the "revenu annuel moyen" (average yearly income) of the employee over their lifetime. The value of the "revenu annuel moyen" changes overtime, historical data will be provided bellow.
+   * The 1st pillar information should be configurable with the following:
+      * The user should be able to set their yearly income on a per-year granularity. You can work with ranges, and always assume the latest value in the range will be the yearly income until retirement. The user should also be able to input "projections" of expected revenue for future years.
+      * There should be a way to set the "revenu annuel moyen" needed to reach 100% allowance (as well as the "minimum sum", which not reaching causes a "penalty year"). You shall pre-fill it with historical data, but the user should be able to make more entries. The employee should pay for 45 years to receive a full pension. The reduced pension is calculated as follows: "Reduced pension = Full pension × (Years contributed / Required contribution years".
+      * There should be a way to set the current monthly payouts according to the "revenu annuel moyen". The data should be pre-filled and is provided below. The data should be modifiable by the user, who shall also be able to create new entries/ranges.
+   * The software should recognize years where the revenue has been zero or less than the "minimum", and count these years as "penalty years". The number of penalty years shall be displayed clearly on the page.
+   * The goal of the app is to provide the user with a way to
+      1. Project that their monthly allowance will be at the age or retirement, in percent of the maximum allowance.
+     2. Print the results in a nice format (you can do this using the same HTML download method as for the other page)
+     3. Have a graphic representation of the minimum and maximum payout conditions compared to the user's (red being minimum, and green being the maximum). This should be a chart using amount over time.
+
+Évolution du revenu annuel moyen déterminant (indicatif):
+PériodeRevenu annuel moyen déterminant (CHF)
+1950~5'000
+1960~8'000
+1970~15'000
+1980~30'000
+1990~45'000
+2000~60'000
+2010~75'000
+2020~85'000
+2025~88'200
+
+Cotisation minimale annuelle (non-actifs)
+AnnéeMontant minimal annuel (CHF)
+1948 40
+1969 100
+1980 200
+1990 300
+2000 324
+2010 460
+2020 496
+2024 514
+2025 530
+
+Revenu annuel moyen déterminant (CHF)
+Rente mensuelle AVS (CHF)
+14 100 1 260
+35 400 1 890
+56 700 2 205
+88 200 et plus 2 520
+
+Modify the code accordingly and return the source code. For the constant "TRANSLATIONS", return only the new entries. For the rest, return the whole source code.
+
+## Prompt 23 (new chat)
+I have provided you with a python app.
+
+There are some issues I need you to fix:
+* The computing of the early/late factor seem to be inverted: going to pension early increases the pension amount when it should actually decrease it. Details are below.
+* When adding new entried to the "1st Pillar Projection" page, the newly added entry should use the previou's entry "To Year" + 1 year as its default "From Year". The last entry in the list should go from the "From Year" until the age of retirement automatically.
+
+Do not change anything else. Return only the changed portions of code. Return whole functions and not parts.
+
+DETAILS ABOUT EARLY/LATE FACOTORS:
+(omitted)
+
+## Prompt 24
+I have provided you with a python app.
+
+There are some issues I need you to fix:
+* The Early/Late Retirement should be moved from the "1st Pillar Configuration" to the "1st Pillar Summary" tab.
+* The computing of the early/late factor seem to be inverted: going to pension early increases the pension amount when it should actually decrease it. Make sure the Early/Late Retirement slider has the right effect on the pension.
+* Uploading a data file does not automatically load it (the user has to change pages so that their data is shown). Make it so that uploading a data file will refresh the page with the correct data.
+
+Do not change anything else. Return only the changed portions of code. Return whole functions and not parts.
+
+## Prompt 25 (new chat)
+I have provided you with a python app.
+
+The app as an issue with the use of the "Early/Late Retirement" slider: using the sliders make the app a little wonky. It does not automatically refresh when the slider is used, but does this once the slider is used a second time... returning to the previously set value. Correct this.
+
+Do not change anything else. Return only the changed portions of code. Return whole functions and not parts.
+
+## Prompt 26
+Is there a way to pre-compute the values instead and update the graphs and tables dynamically (without having to reload the page) when using the slider?
