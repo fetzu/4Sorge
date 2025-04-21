@@ -1512,7 +1512,7 @@ def calculate_first_pillar_pension(
     Parameters:
     - birth_date: Date of birth
     - retirement_age: Standard retirement age
-    - retirement_offset_years: Offset from standard retirement age (-5 to +5)
+    - retirement_offset_years: Offset from standard retirement age (-2 to +5)
     - yearly_incomes: List of user-defined yearly income ranges
     - minimum_contributions: List of minimum contribution thresholds by year
     - average_annual_incomes: List of average annual income thresholds by year
@@ -1525,56 +1525,83 @@ def calculate_first_pillar_pension(
     if isinstance(birth_date, str):
         birth_date = datetime.strptime(birth_date, "%Y-%m-%d").date()
     
-    # Adjust retirement age based on offset
-    adjusted_retirement_age = retirement_age + retirement_offset_years
-    
-    # Calculate retirement year
-    retirement_year = birth_date.year + adjusted_retirement_age
+    # Always calculate standard retirement (without offset)
+    # This will be used for contribution percentage
+    standard_retirement_age = retirement_age
+    standard_retirement_year = birth_date.year + standard_retirement_age
     
     # Calculate contribution start year (age 21)
     start_year = birth_date.year + 21
     
-    # Initialize variables
-    contribution_years = []
-    incomes = []
-    min_contributions = []
-    penalties = []
-    total_income = 0
-    valid_years = 0
-    penalty_years = 0
+    # Initialize variables for standard calculation
+    standard_contribution_years = []
+    standard_incomes = []
+    standard_min_contributions = []
+    standard_penalties = []
+    standard_total_income = 0
+    standard_valid_years = 0
+    standard_penalty_years = 0
     
-    # Calculate for each year from age 21 to retirement
-    for year in range(start_year, retirement_year + 1):
-        # Get yearly income for this year
+    # Calculate for standard retirement
+    for year in range(start_year, standard_retirement_year + 1):
         income = get_yearly_income(year, yearly_incomes, 0)
-        # Get minimum contribution for this year
         min_contribution = get_minimum_contribution(year, minimum_contributions)
         
-        # Check if income meets minimum contribution
         is_penalty_year = income < min_contribution
         
-        contribution_years.append(year)
-        incomes.append(income)
-        min_contributions.append(min_contribution)
-        penalties.append(is_penalty_year)
+        standard_contribution_years.append(year)
+        standard_incomes.append(income)
+        standard_min_contributions.append(min_contribution)
+        standard_penalties.append(is_penalty_year)
         
         if not is_penalty_year:
-            total_income += income
-            valid_years += 1
+            standard_total_income += income
+            standard_valid_years += 1
         else:
-            penalty_years += 1
+            standard_penalty_years += 1
     
     # Calculate average income over valid contribution years
-    avg_income = total_income / max(1, valid_years)
-    
-    # Get the maximum reference income for the retirement year
-    max_reference_income = get_average_annual_income(retirement_year, average_annual_incomes)
-    
-    # Cap the average income at the maximum reference income
-    capped_avg_income = min(avg_income, max_reference_income)
+    standard_avg_income = standard_total_income / max(1, standard_valid_years)
     
     # Calculate contribution percentage
-    contribution_percentage = min(1.0, valid_years / required_contribution_years)
+    contribution_percentage = min(1.0, standard_valid_years / required_contribution_years)
+    
+    # For display purposes, we'll use the adjusted retirement data
+    adjusted_retirement_age = retirement_age + retirement_offset_years
+    retirement_year = birth_date.year + adjusted_retirement_age
+    
+    # Initialize variables for adjusted calculation
+    adjusted_contribution_years = []
+    adjusted_incomes = []
+    adjusted_min_contributions = []
+    adjusted_penalties = []
+    adjusted_total_income = 0
+    adjusted_valid_years = 0
+    adjusted_penalty_years = 0
+    
+    # Calculate adjusted years data for visualization
+    for year in range(start_year, retirement_year + 1):
+        income = get_yearly_income(year, yearly_incomes, 0)
+        min_contribution = get_minimum_contribution(year, minimum_contributions)
+        
+        is_penalty_year = income < min_contribution
+        
+        adjusted_contribution_years.append(year)
+        adjusted_incomes.append(income)
+        adjusted_min_contributions.append(min_contribution)
+        adjusted_penalties.append(is_penalty_year)
+        
+        if not is_penalty_year:
+            adjusted_total_income += income
+            adjusted_valid_years += 1
+        else:
+            adjusted_penalty_years += 1
+    
+    # Get the maximum reference income for the standard retirement year
+    max_reference_income = get_average_annual_income(standard_retirement_year, average_annual_incomes)
+    
+    # Cap the average income at the maximum reference income
+    capped_avg_income = min(standard_avg_income, max_reference_income)
     
     # Get base monthly pension amount based on capped average income
     base_monthly_pension = get_monthly_pension_amount(capped_avg_income, monthly_payout_rates)
@@ -1583,14 +1610,21 @@ def calculate_first_pillar_pension(
     monthly_pension = base_monthly_pension * contribution_percentage
     
     # Apply early/late retirement factors
-    # Early retirement: -6.8% per year
-    # Late retirement: +5.2% per year
     if retirement_offset_years < 0:
         # Early retirement penalty (reduction)
         monthly_pension *= (1 - 0.068 * abs(retirement_offset_years))
     elif retirement_offset_years > 0:
-        # Late retirement bonus (increase)
-        monthly_pension *= (1 + 0.052 * retirement_offset_years)
+        # Late retirement bonus (increase) - using the provided table
+        late_years = min(retirement_offset_years, 5)  # Cap at 5 years
+        increase_table = {
+            1: 0.052,
+            2: 0.108,
+            3: 0.171,
+            4: 0.240,
+            5: 0.315
+        }
+        increase_rate = increase_table.get(late_years, 0)
+        monthly_pension *= (1 + increase_rate)
     
     # Get maximum possible pension for 100% contribution
     max_monthly_pension = get_monthly_pension_amount(max_reference_income, monthly_payout_rates)
@@ -1598,19 +1632,23 @@ def calculate_first_pillar_pension(
     # Calculate minimum pension (typically for the minimum income)
     min_monthly_pension = get_monthly_pension_amount(0, monthly_payout_rates)
     
-    # Prepare result dictionary
+    # Create the yearly data DataFrame for visualization
+    yearly_data = pd.DataFrame({
+        "Year": adjusted_contribution_years,
+        "Age": [year - birth_date.year for year in adjusted_contribution_years],
+        "Income": adjusted_incomes,
+        "Minimum Contribution": adjusted_min_contributions,
+        "Is Penalty Year": adjusted_penalties
+    })
+    
+    # Prepare result dictionary using standard values for contribution metrics
     result = {
-        "yearly_data": pd.DataFrame({
-            "Year": contribution_years,
-            "Age": [year - birth_date.year for year in contribution_years],
-            "Income": incomes,
-            "Minimum Contribution": min_contributions,
-            "Is Penalty Year": penalties
-        }),
-        "total_years": len(contribution_years),
-        "valid_years": valid_years,
-        "penalty_years": penalty_years,
-        "avg_income": avg_income,
+        "yearly_data": yearly_data,
+        # IMPORTANT: Always use standard values for contribution metrics
+        "total_years": len(standard_contribution_years),
+        "valid_years": standard_valid_years,
+        "penalty_years": standard_penalty_years,
+        "avg_income": standard_avg_income,
         "capped_avg_income": capped_avg_income,
         "max_reference_income": max_reference_income,
         "contribution_percentage": contribution_percentage,
@@ -2775,6 +2813,10 @@ def first_pillar_page():
             first_pillar_data["retirement_offset_years"] = st.session_state.retirement_offset_slider
             data["first_pillar_data"] = first_pillar_data
             st.session_state.pension_data = data
+            
+            # Force recalculation by clearing any cached values
+            if "first_pillar_result" in st.session_state:
+                del st.session_state.first_pillar_result
         
         # Early/Late retirement settings first (before calculating results)
         st.subheader(t("early_late_retirement"))
@@ -2782,7 +2824,7 @@ def first_pillar_page():
         # Create the slider with on_change callback
         retirement_offset = st.slider(
             t("years_offset"),
-            min_value=-5,
+            min_value=-2,
             max_value=5,
             value=first_pillar_data.get("retirement_offset_years", 0),
             help=t("retirement_offset_info"),
@@ -2799,16 +2841,20 @@ def first_pillar_page():
             st.info(t('standard_retirement'))
         
         # Calculate 1st pillar pension based on current data (including slider value)
-        result = calculate_first_pillar_pension(
-            data["birth_date"],
-            data["retirement_age"],
-            first_pillar_data.get("retirement_offset_years", 0),
-            first_pillar_data.get("yearly_incomes", []),
-            first_pillar_data.get("minimum_contributions", []),
-            first_pillar_data.get("average_annual_incomes", []),
-            first_pillar_data.get("monthly_payout_rates", []),
-            first_pillar_data.get("required_contribution_years", 45)
-        )
+        # Use a cached result if available, otherwise calculate fresh
+        if "first_pillar_result" not in st.session_state:
+            st.session_state.first_pillar_result = calculate_first_pillar_pension(
+                data["birth_date"],
+                data["retirement_age"],
+                first_pillar_data.get("retirement_offset_years", 0),
+                first_pillar_data.get("yearly_incomes", []),
+                first_pillar_data.get("minimum_contributions", []),
+                first_pillar_data.get("average_annual_incomes", []),
+                first_pillar_data.get("monthly_payout_rates", []),
+                first_pillar_data.get("required_contribution_years", 45)
+            )
+        
+        result = st.session_state.first_pillar_result
         
         if result:
             # Display summary results
