@@ -4,10 +4,10 @@
 
 [Online version on Streamlit](https://4sorge.streamlit.app)
 
-🇬🇧 TL;DR: play with your pension fund's outcome without any risk!
-🇨🇭🇩🇪 TL;DR: Spiel mit dem Ergebnis deines Pensionsfonds ohne Risiko!
-🇨🇭🇫🇷 TL;DR : joue avec les résultats de ton fonds de pension sans aucun risque!
-🇨🇭🇮🇹 TL;DR: gioca con il risultato del tuo fondo pensione senza alcun rischio!
+🇬🇧 TL;DR: play with your pension fund's outcome without any risk!  
+🇨🇭🇩🇪 TL;DR: Spiel mit dem Ergebnis deines Pensionsfonds ohne Risiko!  
+🇨🇭🇫🇷 TL;DR : joue avec les résultats de ton fonds de pension sans aucun risque!  
+🇨🇭🇮🇹 TL;DR: gioca con il risultato del tuo fondo pensione senza alcun rischio!  
 
 ## <a name="english"></a>English
 
